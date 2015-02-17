@@ -1,0 +1,39 @@
+{
+	"name": "estvoyage/serialization",
+	"type": "library",
+	"description": "An east-oriented serialization interface",
+	"keywords": [ "Serialization", "East" ],
+	"homepage": "http://github.com/estvoyage/serialization",
+	"license": "BSD",
+	"authors": [
+		{
+			"name": "Frédéric Hardy",
+			"email": "frederic.hardy@mageekbox.net",
+			"homepage": "http://blog.mageekbox.net"
+		}
+	],
+	"require": {
+		"php": ">=5.5.0",
+		"estvoyage/object": "@dev",
+		"estvoyage/value": "@dev"
+	},
+	"repositories": [
+		{
+			"type": "git",
+			"url": "https://github.com/mageekguy/atoum.git"
+		}
+	],
+	"require-dev": {
+		"mageekguy/atoum": "@dev"
+	},
+	"autoload": {
+		"psr-4": {
+			"estvoyage\\serialization\\": "classes"
+		}
+	},
+	"autoload-dev": {
+		"psr-4": {
+			"estvoyage\\serialization\\tests\\units\\": "tests/units"
+		}
+	}
+}
