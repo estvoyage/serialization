@@ -13,48 +13,65 @@ final class json extends serialization\serializer
 		$delimiter = ''
 	;
 
-	function serialize(object\storable $storable)
+	protected function start()
 	{
-		$serialization = new serialization\serialization('{' . parent::serialize($storable) . '}');
-
 		$this->delimiter = '';
 
-		return $serialization;
+		$this->newSerialization(new serialization\serialization('{'));
 	}
 
-	function serializeType(object\type $type)
+	protected function serializeType(object\type $type)
 	{
 		return $this;
 	}
 
-	function serializeStringProperyWithValue(object\property $property, object\property\string $string)
+	protected function serializeStringPropertyWithValue(object\property $property, object\property\string $string)
 	{
 		return $this->serializeProperty($property, json_encode((string) $string));
 	}
 
-	function serializeIntegerProperyWithValue(object\property $property, object\property\integer $integer)
+	protected function serializeIntegerPropertyWithValue(object\property $property, object\property\integer $integer)
 	{
 		return $this->serializeProperty($property, json_encode($integer->asInteger));
 	}
 
-	function serializeFloatPropertyWithValue(object\property $property, object\property\float $float)
+	protected function serializeFloatPropertyWithValue(object\property $property, object\property\float $float)
 	{
 		return $this->serializeProperty($property, json_encode($float->asFloat));
 	}
 
-	function serializeBooleanPropertyWithValue(object\property $property, object\property\boolean $boolean)
+	protected function serializeBooleanPropertyWithValue(object\property $property, object\property\boolean $boolean)
 	{
 		return $this->serializeProperty($property, json_encode($boolean->value));
 	}
 
-	function serializeStorablePropertyWithValue(object\property $property, object\storable $storable)
+	protected function serializeStorablePropertyWithValue(object\property $property, object\storable $storable)
 	{
-		return $this->serializeProperty($property, (new self)->serialize($storable));
+		return $this->serializeProperty($property, $this->serialize($storable));
 	}
 
-	function serializeNullProperty(object\property $property)
+	protected function serializeArrayPropertyWithValues(object\property $property, object\storable $storable, object\storable... $storables)
+	{
+		$serialization = [];
+
+		array_unshift($storables, $storable);
+
+		foreach ($storables as $storable)
+		{
+			$serialization[] = $this->serialize($storable);
+		}
+
+		return $this->serializeProperty($property, '[' . join(',', $serialization) . ']');
+	}
+
+	protected function serializeNullProperty(object\property $property)
 	{
 		return $this->serializeProperty($property, json_encode(null));
+	}
+
+	protected function end()
+	{
+		$this->newSerialization(new serialization\serialization('}'));
 	}
 
 	private function serializeProperty($property, $json)

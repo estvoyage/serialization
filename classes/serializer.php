@@ -14,15 +14,17 @@ abstract class serializer implements object\storer
 
 	function serialize(object\storable $storable)
 	{
-		$this->buffer = '';
+		$serializer = clone $this;
 
-		$storable->storerIsReady($this);
+		$serializer->buffer = '';
 
-		$buffer = $this->buffer;
+		$serializer->start();
 
-		$this->buffer = null;
+		$storable->storerIsReady($serializer);
 
-		return new serialization($buffer);
+		$serializer->end();
+
+		return new serialization($serializer->buffer);
 	}
 
 	final function typeIs(object\type $type)
@@ -39,7 +41,7 @@ abstract class serializer implements object\storer
 	{
 		$this
 			->checkIfReady()
-			->serializeStringProperyWithValue($property, $string)
+			->serializeStringPropertyWithValue($property, $string)
 		;
 
 		return $this;
@@ -49,7 +51,7 @@ abstract class serializer implements object\storer
 	{
 		$this
 			->checkIfReady()
-			->serializeIntegerProperyWithValue($property, $integer)
+			->serializeIntegerPropertyWithValue($property, $integer)
 		;
 
 		return $this;
@@ -85,6 +87,16 @@ abstract class serializer implements object\storer
 		return $this;
 	}
 
+	final function arrayPropertyHasValues(object\property $property, object\storable $storable, object\storable... $storables)
+	{
+		$this
+			->checkIfReady()
+			->serializeArrayPropertyWithValues($property, $storable, ...$storables)
+		;
+
+		return $this;
+	}
+
 	final function nullProperty(object\property $property)
 	{
 		$this
@@ -95,13 +107,16 @@ abstract class serializer implements object\storer
 		return $this;
 	}
 
+	protected abstract function start();
 	protected abstract function serializeType(object\type $type);
-	protected abstract function serializeStringProperyWithValue(object\property $property, object\property\string $string);
-	protected abstract function serializeIntegerProperyWithValue(object\property $property, object\property\integer $integer);
+	protected abstract function serializeStringPropertyWithValue(object\property $property, object\property\string $string);
+	protected abstract function serializeIntegerPropertyWithValue(object\property $property, object\property\integer $integer);
 	protected abstract function serializeFloatPropertyWithValue(object\property $property, object\property\float $float);
 	protected abstract function serializeBooleanPropertyWithValue(object\property $property, object\property\boolean $boolean);
 	protected abstract function serializeStorablePropertyWithValue(object\property $property, object\storable $storable);
+	protected abstract function serializeArrayPropertyWithValues(object\property $property, object\storable $storable, object\storable... $storables);
 	protected abstract function serializeNullProperty(object\property $property);
+	protected abstract function end();
 
 	final protected function newSerialization(serialization $serialization)
 	{

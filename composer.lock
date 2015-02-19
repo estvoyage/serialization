@@ -4,7 +4,7 @@
         "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "a0e8d382f55a8aae4121086753a29ae6",
+    "hash": "73b6592b85d5e72ccbf7e5ea76f3e945",
     "packages": [
         {
             "name": "estvoyage/object",
@@ -12,12 +12,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/estvoyage/object.git",
-                "reference": "0f4ecb317431b77cdaa876c5c772f6980eb35309"
+                "reference": "cc0c62f59e8d8f34e6b23ac07d1a5b8ef7a13c6b"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/estvoyage/object/zipball/0f4ecb317431b77cdaa876c5c772f6980eb35309",
-                "reference": "0f4ecb317431b77cdaa876c5c772f6980eb35309",
+                "url": "https://api.github.com/repos/estvoyage/object/zipball/cc0c62f59e8d8f34e6b23ac07d1a5b8ef7a13c6b",
+                "reference": "cc0c62f59e8d8f34e6b23ac07d1a5b8ef7a13c6b",
                 "shasum": ""
             },
             "require": {
@@ -50,7 +50,7 @@
                 "East",
                 "object"
             ],
-            "time": "2015-02-17 13:31:07"
+            "time": "2015-02-17 20:13:36"
         },
         {
             "name": "estvoyage/value",
@@ -58,12 +58,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/estvoyage/value.git",
-                "reference": "2287c9acb000f287927e8278dbb5fb0c78e75501"
+                "reference": "6263897e14159a9d719d66059824402d348dbd88"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/estvoyage/value/zipball/2287c9acb000f287927e8278dbb5fb0c78e75501",
-                "reference": "2287c9acb000f287927e8278dbb5fb0c78e75501",
+                "url": "https://api.github.com/repos/estvoyage/value/zipball/6263897e14159a9d719d66059824402d348dbd88",
+                "reference": "6263897e14159a9d719d66059824402d348dbd88",
                 "shasum": ""
             },
             "require": {
@@ -98,7 +98,7 @@
                 "Whole value",
                 "value"
             ],
-            "time": "2015-02-15 19:51:00"
+            "time": "2015-02-17 19:57:19"
         }
     ],
     "packages-dev": [
@@ -108,7 +108,7 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/mageekguy/atoum.git",
-                "reference": "8460c32aa8ebfb897a1673ee89fb1c8f9494cba0"
+                "reference": "6551465a870584e6fbdc5646160762179254cc4a"
             },
             "require": {
                 "ext-hash": "*",
@@ -169,7 +169,7 @@
                 "test",
                 "unit testing"
             ],
-            "time": "2015-02-15 19:55:08"
+            "time": "2015-02-17 20:15:58"
         }
     ],
     "aliases": [],
@@ -182,7 +182,7 @@
     "prefer-stable": false,
     "prefer-lowest": false,
     "platform": {
-        "php": ">=5.5.0"
+        "php": ">=5.6.0"
     },
     "platform-dev": []
 }
