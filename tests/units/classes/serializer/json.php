@@ -259,16 +259,12 @@ class json extends units\test
 
 			->if(
 				$this->calling($storable)->storerIsReady = function($serializer) use (
-						$stringProperty,
-						$string,
-						$integerProperty,
-						$integer,
-						$floatProperty,
-						$float,
-						$booleanProperty,
-						$boolean,
-						$storableProperty,
-						$otherStorable,
+						$stringProperty, $string,
+						$integerProperty, $integer,
+						$floatProperty, $float,
+						$booleanProperty, $boolean,
+						$storableProperty, $otherStorable,
+						$arrayProperty,
 						$nullProperty
 					) {
 					$serializer
@@ -277,12 +273,18 @@ class json extends units\test
 						->floatPropertyHasValue($floatProperty, $float)
 						->booleanPropertyHasValue($booleanProperty, $boolean)
 						->storablePropertyHasValue($storableProperty, $otherStorable)
+						->arrayPropertyHasValues($arrayProperty, $otherStorable)
 						->nullProperty($nullProperty)
 					;
 				}
 			)
 			->then
-				->object($this->testedInstance->serialize($storable))->isEqualTo(new serialization\serialization('{"stringProperty":"a string","integerProperty":666,"floatProperty":666.999,"booleanProperty":true,"storableProperty":{"integerProperty":666},"nullProperty":null}'))
+				->object(
+					$this->testedInstance->serialize($storable))->isEqualTo(
+						new serialization\serialization(
+							'{"stringProperty":"a string","integerProperty":666,"floatProperty":666.999,"booleanProperty":true,"storableProperty":{"integerProperty":666},"arrayProperty":[{"integerProperty":666}],"nullProperty":null}'
+						)
+					)
 		;
 	}
 }
