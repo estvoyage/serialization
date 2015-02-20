@@ -9,22 +9,18 @@ use
 abstract class serializer implements object\storer
 {
 	private
-		$buffer
+		$serialization
 	;
 
 	function serialize(object\storable $storable)
 	{
-		$serializer = clone $this;
-
-		$serializer->buffer = '';
-
-		$serializer->start();
-
-		$storable->storerIsReady($serializer);
-
-		$serializer->end();
-
-		return new serialization($serializer->buffer);
+		return
+			$this
+				->prepareSerialization()
+				->startSerializationOf($storable)
+				->finalizeSerialization()
+				->endOfSerialization()
+		;
 	}
 
 	final function typeIs(object\type $type)
@@ -107,7 +103,7 @@ abstract class serializer implements object\storer
 		return $this;
 	}
 
-	protected abstract function start();
+	protected abstract function prepareSerialization();
 	protected abstract function serializeType(object\type $type);
 	protected abstract function serializeStringPropertyWithValue(object\property $property, object\property\string $string);
 	protected abstract function serializeIntegerPropertyWithValue(object\property $property, object\property\integer $integer);
@@ -116,18 +112,36 @@ abstract class serializer implements object\storer
 	protected abstract function serializeStorablePropertyWithValue(object\property $property, object\storable $storable);
 	protected abstract function serializeArrayPropertyWithValues(object\property $property, object\storable $storable, object\storable... $storables);
 	protected abstract function serializeNullProperty(object\property $property);
-	protected abstract function end();
+	protected abstract function finalizeSerialization();
 
-	final protected function newSerialization(serialization $serialization)
+	final protected function serializationIs(serialization $serialization)
 	{
-		$this->buffer .= $serialization;
+		$this->serialization = $serialization;
 
 		return $this;
 	}
 
+	private function startSerializationOf(object\storable $storable)
+	{
+		$this->serialization = new serialization;
+
+		$storable->storerIsReady($this);
+
+		return $this;
+	}
+
+	function endOfSerialization()
+	{
+		$serialization = $this->serialization;
+
+		$this->serialization = null;
+
+		return $serialization;
+	}
+
 	private function checkIfReady()
 	{
-		if ($this->buffer === null)
+		if (! $this->serialization)
 		{
 			throw new exception\logic('Serializer is not ready');
 		}

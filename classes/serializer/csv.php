@@ -10,17 +10,23 @@ use
 final class csv extends serialization\serializer
 {
 	private
-		$header,
-		$line,
-		$namespace
+		$header = [],
+		$line = [],
+		$namespace = []
 	;
 
-	protected function start()
+	protected function prepareSerialization()
 	{
-		$this->header = [];
-		$this->line = [];
+		$serializer = new self;
 
-		return $this;
+		if ($this->namespace)
+		{
+			$serializer->header = & $this->header;
+			$serializer->line = & $this->line;
+			$serializer->namespace = $this->namespace;
+		}
+
+		return $serializer;
 	}
 
 	protected function serializeType(object\type $type)
@@ -49,13 +55,11 @@ final class csv extends serialization\serializer
 
 	protected function serializeStorablePropertyWithValue(object\property $property, object\storable $storable)
 	{
-		$serializer = clone $this;
-		$serializer->namespace .= $property . '.';
+		$this->namespace[] = $property;
 
-		$storable->storerIsReady($serializer->start());
+		$this->serialize($storable);
 
-		$this->header = array_merge($this->header, $serializer->header);
-		$this->line = array_merge($this->line, $serializer->line);
+		array_pop($this->namespace);
 	}
 
 	protected function serializeNullProperty(object\property $property)
@@ -68,21 +72,25 @@ final class csv extends serialization\serializer
 		throw new csv\exception('Unable to serialize this kind of data');
 	}
 
-	protected function end()
+	protected function finalizeSerialization()
 	{
-
-		$this
-			->newSerialization(
-				new serialization\serialization(
-					! $this->header ? ''  : join(',', $this->header) . PHP_EOL . join(',', $this->line)
+		if (! $this->namespace && $this->header)
+		{
+			$this
+				->serializationIs(
+					new serialization\serialization(
+						join(',', $this->header) . PHP_EOL . join(',', $this->line)
+					)
 				)
-			)
-		;
+			;
+		}
+
+		return $this;
 	}
 
 	private function addInLine(object\property $property, $value)
 	{
-		$property = '"' . $this->namespace . $property . '"';
+		$property = '"' . (! $this->namespace ? '' : join('.', $this->namespace) . '.') . $property . '"';
 
 		$key = array_search($property, $this->header);
 

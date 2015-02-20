@@ -10,14 +10,13 @@ use
 final class json extends serialization\serializer
 {
 	private
-		$delimiter = ''
+		$delimiter = '',
+		$buffer = ''
 	;
 
-	protected function start()
+	protected function prepareSerialization()
 	{
-		$this->delimiter = '';
-
-		$this->newSerialization(new serialization\serialization('{'));
+		return new self;
 	}
 
 	protected function serializeType(object\type $type)
@@ -69,14 +68,14 @@ final class json extends serialization\serializer
 		return $this->serializeProperty($property, json_encode(null));
 	}
 
-	protected function end()
+	protected function finalizeSerialization()
 	{
-		$this->newSerialization(new serialization\serialization('}'));
+		return $this->serializationIs(new serialization\serialization('{' . $this->buffer . '}'));
 	}
 
 	private function serializeProperty($property, $json)
 	{
-		$this->newSerialization(new serialization\serialization($this->delimiter . json_encode((string) $property) . ':' . $json));
+		$this->buffer .= $this->delimiter . json_encode((string) $property) . ':' . $json;
 
 		if (! $this->delimiter)
 		{
