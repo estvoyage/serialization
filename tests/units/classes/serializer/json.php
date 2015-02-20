@@ -236,6 +236,17 @@ class json extends units\test
 				->object($this->testedInstance->serialize($storable))->isEqualTo(new serialization\serialization('{"storableProperty":{"integerProperty":666}}'))
 
 			->given(
+				$arrayProperty = new object\property('arrayProperty')
+			)
+			->if(
+				$this->calling($storable)->storerIsReady = function($serializer) use ($arrayProperty, $otherStorable) {
+					$serializer->arrayPropertyHasValues($arrayProperty, $otherStorable);
+				}
+			)
+			->then
+				->object($this->testedInstance->serialize($storable))->isEqualTo(new serialization\serialization('{"arrayProperty":[{"integerProperty":666}]}'))
+
+			->given(
 				$nullProperty = new object\property('nullProperty')
 			)
 			->if(
