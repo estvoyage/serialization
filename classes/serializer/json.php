@@ -21,32 +21,31 @@ final class json extends serialization\serializer
 
 	protected function serializeType(object\type $type)
 	{
-		return $this;
 	}
 
 	protected function serializeStringPropertyWithValue(object\property $property, object\property\string $string)
 	{
-		return $this->serializeProperty($property, json_encode((string) $string));
+		$this->serializeProperty($property, json_encode((string) $string));
 	}
 
 	protected function serializeIntegerPropertyWithValue(object\property $property, object\property\integer $integer)
 	{
-		return $this->serializeProperty($property, json_encode($integer->asInteger));
+		$this->serializeProperty($property, json_encode($integer->asInteger));
 	}
 
 	protected function serializeFloatPropertyWithValue(object\property $property, object\property\float $float)
 	{
-		return $this->serializeProperty($property, json_encode($float->asFloat));
+		$this->serializeProperty($property, json_encode($float->asFloat));
 	}
 
 	protected function serializeBooleanPropertyWithValue(object\property $property, object\property\boolean $boolean)
 	{
-		return $this->serializeProperty($property, json_encode($boolean->value));
+		$this->serializeProperty($property, json_encode($boolean->value));
 	}
 
 	protected function serializeStorablePropertyWithValue(object\property $property, object\storable $storable)
 	{
-		return $this->serializeProperty($property, $this->serialize($storable));
+		$this->serializeProperty($property, $this->serialize($storable));
 	}
 
 	protected function serializeArrayPropertyWithValues(object\property $property, object\storable $storable, object\storable... $storables)
@@ -60,12 +59,12 @@ final class json extends serialization\serializer
 			$serialization[] = $this->serialize($storable);
 		}
 
-		return $this->serializeProperty($property, '[' . join(',', $serialization) . ']');
+		$this->serializeProperty($property, '[' . join(',', $serialization) . ']');
 	}
 
 	protected function serializeNullProperty(object\property $property)
 	{
-		return $this->serializeProperty($property, json_encode(null));
+		$this->serializeProperty($property, json_encode(null));
 	}
 
 	protected function finalizeSerialization()
@@ -81,7 +80,5 @@ final class json extends serialization\serializer
 		{
 			$this->delimiter = ',';
 		}
-
-		return $this;
 	}
 }
