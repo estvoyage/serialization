@@ -26,8 +26,8 @@ abstract class serializer implements object\storer
 	final function typeIs(object\type $type)
 	{
 		$this
-			->checkIfReady()
-			->serializeType($type)
+			->ifReady()
+				->serializeType($type)
 		;
 
 		return $this;
@@ -36,8 +36,8 @@ abstract class serializer implements object\storer
 	final function stringPropertyHasValue(object\property $property, object\property\string $string)
 	{
 		$this
-			->checkIfReady()
-			->serializeStringPropertyWithValue($property, $string)
+			->ifReady()
+				->serializeStringPropertyWithValue($property, $string)
 		;
 
 		return $this;
@@ -46,8 +46,8 @@ abstract class serializer implements object\storer
 	final function integerPropertyHasValue(object\property $property, object\property\integer $integer)
 	{
 		$this
-			->checkIfReady()
-			->serializeIntegerPropertyWithValue($property, $integer)
+			->ifReady()
+				->serializeIntegerPropertyWithValue($property, $integer)
 		;
 
 		return $this;
@@ -56,8 +56,8 @@ abstract class serializer implements object\storer
 	final function floatPropertyHasValue(object\property $property, object\property\float $float)
 	{
 		$this
-			->checkIfReady()
-			->serializeFloatPropertyWithValue($property, $float)
+			->ifReady()
+				->serializeFloatPropertyWithValue($property, $float)
 		;
 
 		return $this;
@@ -66,8 +66,8 @@ abstract class serializer implements object\storer
 	final function booleanPropertyHasValue(object\property $property, object\property\boolean $boolean)
 	{
 		$this
-			->checkIfReady()
-			->serializeBooleanPropertyWithValue($property, $boolean)
+			->ifReady()
+				->serializeBooleanPropertyWithValue($property, $boolean)
 		;
 
 		return $this;
@@ -76,8 +76,8 @@ abstract class serializer implements object\storer
 	final function storablePropertyHasValue(object\property $property, object\storable $storable)
 	{
 		$this
-			->checkIfReady()
-			->serializeStorablePropertyWithValue($property, $storable)
+			->ifReady()
+				->serializeStorablePropertyWithValue($property, $storable)
 		;
 
 		return $this;
@@ -86,8 +86,8 @@ abstract class serializer implements object\storer
 	final function arrayPropertyHasValues(object\property $property, object\storable $storable, object\storable... $storables)
 	{
 		$this
-			->checkIfReady()
-			->serializeArrayPropertyWithValues($property, $storable, ...$storables)
+			->ifReady()
+				->serializeArrayPropertyWithValues($property, $storable, ...$storables)
 		;
 
 		return $this;
@@ -96,8 +96,8 @@ abstract class serializer implements object\storer
 	final function nullProperty(object\property $property)
 	{
 		$this
-			->checkIfReady()
-			->serializeNullProperty($property)
+			->ifReady()
+				->serializeNullProperty($property)
 		;
 
 		return $this;
@@ -139,7 +139,7 @@ abstract class serializer implements object\storer
 		return $serialization;
 	}
 
-	private function checkIfReady()
+	private function ifReady()
 	{
 		if (! $this->serialization)
 		{
