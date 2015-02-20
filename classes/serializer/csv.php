@@ -23,7 +23,7 @@ final class csv extends serialization\serializer
 		{
 			$serializer->header = & $this->header;
 			$serializer->line = & $this->line;
-			$serializer->namespace = $this->namespace;
+			$serializer->namespace = & $this->namespace;
 		}
 
 		return $serializer;
@@ -35,22 +35,22 @@ final class csv extends serialization\serializer
 
 	protected function serializeStringPropertyWithValue(object\property $property, object\property\string $string)
 	{
-		$this->addInLine($property, '"' . $string . '"');
+		$this->addPropertyWithValue($property, '"' . $string . '"');
 	}
 
 	protected function serializeIntegerPropertyWithValue(object\property $property, object\property\integer $integer)
 	{
-		$this->addInLine($property, $integer);
+		$this->addPropertyWithValue($property, $integer);
 	}
 
 	protected function serializeFloatPropertyWithValue(object\property $property, object\property\float $float)
 	{
-		$this->addInLine($property, $float);
+		$this->addPropertyWithValue($property, $float);
 	}
 
 	protected function serializeBooleanPropertyWithValue(object\property $property, object\property\boolean $boolean)
 	{
-		$this->addInLine($property, $boolean->value ? 1 : 0);
+		$this->addPropertyWithValue($property, $boolean->value ? 1 : 0);
 	}
 
 	protected function serializeStorablePropertyWithValue(object\property $property, object\storable $storable)
@@ -64,7 +64,7 @@ final class csv extends serialization\serializer
 
 	protected function serializeNullProperty(object\property $property)
 	{
-		$this->addInLine($property, '');
+		$this->addPropertyWithValue($property, '');
 	}
 
 	protected function serializeArrayPropertyWithValues(object\property $property, object\storable $storable, object\storable... $storables)
@@ -88,7 +88,7 @@ final class csv extends serialization\serializer
 		return $this;
 	}
 
-	private function addInLine(object\property $property, $value)
+	private function addPropertyWithValue(object\property $property, $value)
 	{
 		$property = '"' . (! $this->namespace ? '' : join('.', $this->namespace) . '.') . $property . '"';
 
