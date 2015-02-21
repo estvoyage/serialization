@@ -116,6 +116,10 @@ Run it using **atoum**:
 
     $ vendor/bin/atoum
 
+## Contributing
+
+See the bundled `CONTRIBUTING` file for details.
+
 ## License
 
 **serialization** is released under the FreeBSD License, see the bundled `COPYING` file for details.
