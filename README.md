@@ -3,7 +3,7 @@
 ## An east-oriented serialization interface
 
 **serialization** is a [PHP](http://www.php.net) library that allows you to implement a [serialization](http://en.wikipedia.org/wiki/Serialization) protocol in any class.  
-Traditionaly, if you want serialize an instance as JSON, you implements the `[jsonSerializable](http://php.net/jsonserializable)` interface in its class.  
+Traditionaly, if you want serialize an instance as JSON, you implements the [`jsonSerializable`](http://php.net/jsonserializable) interface in its class.  
 Moreover, if several classes should support JSON serialization, you should implements this interface in each of them.  
 And if you want using an another serialization format, as XML, you should implements a new method in each classes.  
 With **serialization**, you can define only one method in each classes to handle any number of serialization format.
