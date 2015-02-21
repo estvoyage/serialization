@@ -42,13 +42,13 @@ class json extends units\test
 		$this
 			->given(
 				$property = new object\property('foo'),
-				$string = new object\property\string('bar')
+				$string1 = new object\property\string('bar')
 			)
 			->if(
 				$this->newTestedInstance
 			)
 			->then
-				->exception(function() use ($property, $string) { $this->testedInstance->stringPropertyHasValue($property, $string); })
+				->exception(function() use ($property, $string1) { $this->testedInstance->stringPropertyHasValue($property, $string1); })
 					->isInstanceOf('estvoyage\serialization\exception\logic')
 					->hasMessage('Serializer is not ready')
 		;
@@ -59,13 +59,13 @@ class json extends units\test
 		$this
 			->given(
 				$property = new object\property('foo'),
-				$integer = new object\property\integer(666)
+				$integer1 = new object\property\integer(666)
 			)
 			->if(
 				$this->newTestedInstance
 			)
 			->then
-				->exception(function() use ($property, $integer) { $this->testedInstance->integerPropertyHasValue($property, $integer); })
+				->exception(function() use ($property, $integer1) { $this->testedInstance->integerPropertyHasValue($property, $integer1); })
 					->isInstanceOf('estvoyage\serialization\exception\logic')
 					->hasMessage('Serializer is not ready')
 		;
@@ -76,13 +76,13 @@ class json extends units\test
 		$this
 			->given(
 				$property = new object\property('foo'),
-				$float = new object\property\float(666.999)
+				$float1 = new object\property\float(666.999)
 			)
 			->if(
 				$this->newTestedInstance
 			)
 			->then
-				->exception(function() use ($property, $float) { $this->testedInstance->floatPropertyHasValue($property, $float); })
+				->exception(function() use ($property, $float1) { $this->testedInstance->floatPropertyHasValue($property, $float1); })
 					->isInstanceOf('estvoyage\serialization\exception\logic')
 					->hasMessage('Serializer is not ready')
 		;
@@ -93,13 +93,13 @@ class json extends units\test
 		$this
 			->given(
 				$property = new object\property('foo'),
-				$boolean = new object\property\boolean(rand(0, 1) == 1)
+				$boolean1 = new object\property\boolean(rand(0, 1) == 1)
 			)
 			->if(
 				$this->newTestedInstance
 			)
 			->then
-				->exception(function() use ($property, $boolean) { $this->testedInstance->booleanPropertyHasValue($property, $boolean); })
+				->exception(function() use ($property, $boolean1) { $this->testedInstance->booleanPropertyHasValue($property, $boolean1); })
 					->isInstanceOf('estvoyage\serialization\exception\logic')
 					->hasMessage('Serializer is not ready')
 		;
@@ -110,13 +110,13 @@ class json extends units\test
 		$this
 			->given(
 				$property = new object\property('foo'),
-				$storable = new \mock\estvoyage\object\storable
+				$storable1 = new \mock\estvoyage\object\storable
 			)
 			->if(
 				$this->newTestedInstance
 			)
 			->then
-				->exception(function() use ($property, $storable) { $this->testedInstance->storablePropertyHasValue($property, $storable); })
+				->exception(function() use ($property, $storable1) { $this->testedInstance->storablePropertyHasValue($property, $storable1); })
 					->isInstanceOf('estvoyage\serialization\exception\logic')
 					->hasMessage('Serializer is not ready')
 		;
@@ -143,146 +143,160 @@ class json extends units\test
 		$this
 			->given(
 				$this->newTestedInstance,
-				$storable = new storable
+				$storable1 = new storable
 			)
 
 			->if(
-				$this->calling($storable)->storerIsReady = function($serializer) {}
+				$this->calling($storable1)->storerIsReady = function($serializer) {}
 			)
 			->then
-				->object($this->testedInstance->serialize($storable))->isEqualTo(new serialization\serialization('{}'))
+				->object($this->testedInstance->serialize($storable1))->isEqualTo(new serialization\serialization('{}'))
 
 			->if(
 				$type = new object\type('aType'),
-				$this->calling($storable)->storerIsReady = function($serializer) use ($type) {
+				$this->calling($storable1)->storerIsReady = function($serializer) use ($type) {
 					$serializer->typeIs($type);
 				}
 			)
 			->then
-				->object($this->testedInstance->serialize($storable))->isEqualTo(new serialization\serialization('{}'))
+				->object($this->testedInstance->serialize($storable1))->isEqualTo(new serialization\serialization('{}'))
 
 			->given(
-				$stringProperty = new object\property('stringProperty'),
-				$string = new object\property\string('a string')
+				$string1Property = new object\property('string1Property'),
+				$string1 = new object\property\string('a string 1')
 			)
 			->if(
-				$this->calling($storable)->storerIsReady = function($serializer) use ($stringProperty, $string) {
-					$serializer->stringPropertyHasValue($stringProperty, $string);
+				$this->calling($storable1)->storerIsReady = function($serializer) use ($string1Property, $string1) {
+					$serializer->stringPropertyHasValue($string1Property, $string1);
 				}
 			)
 			->then
-				->object($this->testedInstance->serialize($storable))->isEqualTo(new serialization\serialization('{"stringProperty":"a string"}'))
+				->object($this->testedInstance->serialize($storable1))->isEqualTo(new serialization\serialization('{"string1Property":"a string 1"}'))
 
 			->given(
-				$integerProperty = new object\property('integerProperty'),
-				$integer = new object\property\integer(666)
+				$integer1Property = new object\property('integer1Property'),
+				$integer1 = new object\property\integer(666)
 			)
 			->if(
-				$this->calling($storable)->storerIsReady = function($serializer) use ($integerProperty, $integer) {
-					$serializer->integerPropertyHasValue($integerProperty, $integer);
+				$this->calling($storable1)->storerIsReady = function($serializer) use ($integer1Property, $integer1) {
+					$serializer->integerPropertyHasValue($integer1Property, $integer1);
 				}
 			)
 			->then
-				->object($this->testedInstance->serialize($storable))->isEqualTo(new serialization\serialization('{"integerProperty":666}'))
+				->object($this->testedInstance->serialize($storable1))->isEqualTo(new serialization\serialization('{"integer1Property":666}'))
 
 			->given(
-				$floatProperty = new object\property('floatProperty'),
-				$float = new object\property\float(666.999)
+				$float1Property = new object\property('float1Property'),
+				$float1 = new object\property\float(666.999)
 			)
 			->if(
-				$this->calling($storable)->storerIsReady = function($serializer) use ($floatProperty, $float) {
-					$serializer->floatPropertyHasValue($floatProperty, $float);
+				$this->calling($storable1)->storerIsReady = function($serializer) use ($float1Property, $float1) {
+					$serializer->floatPropertyHasValue($float1Property, $float1);
 				}
 			)
 			->then
-				->object($this->testedInstance->serialize($storable))->isEqualTo(new serialization\serialization('{"floatProperty":666.999}'))
+				->object($this->testedInstance->serialize($storable1))->isEqualTo(new serialization\serialization('{"float1Property":666.999}'))
 
 			->given(
-				$booleanProperty = new object\property('booleanProperty'),
-				$boolean = new object\property\boolean
+				$boolean1Property = new object\property('boolean1Property'),
+				$boolean1 = new object\property\boolean
 			)
 			->if(
-				$this->calling($storable)->storerIsReady = function($serializer) use ($booleanProperty, $boolean) {
-					$serializer->booleanPropertyHasValue($booleanProperty, $boolean);
+				$this->calling($storable1)->storerIsReady = function($serializer) use ($boolean1Property, $boolean1) {
+					$serializer->booleanPropertyHasValue($boolean1Property, $boolean1);
 				}
 			)
 			->then
-				->object($this->testedInstance->serialize($storable))->isEqualTo(new serialization\serialization('{"booleanProperty":false}'))
+				->object($this->testedInstance->serialize($storable1))->isEqualTo(new serialization\serialization('{"boolean1Property":false}'))
 
 			->given(
-				$boolean = new object\property\boolean(true)
+				$boolean1 = new object\property\boolean(true)
 			)
 			->if(
-				$this->calling($storable)->storerIsReady = function($serializer) use ($booleanProperty, $boolean) {
-					$serializer->booleanPropertyHasValue($booleanProperty, $boolean);
+				$this->calling($storable1)->storerIsReady = function($serializer) use ($boolean1Property, $boolean1) {
+					$serializer->booleanPropertyHasValue($boolean1Property, $boolean1);
 				}
 			)
 			->then
-				->object($this->testedInstance->serialize($storable))->isEqualTo(new serialization\serialization('{"booleanProperty":true}'))
+				->object($this->testedInstance->serialize($storable1))->isEqualTo(new serialization\serialization('{"boolean1Property":true}'))
 
 			->given(
-				$storableProperty = new object\property('storableProperty'),
-				$otherStorable = new \mock\estvoyage\object\storable
+				$storable1Property = new object\property('storable1Property'),
+				$storable2 = new \mock\estvoyage\object\storable
 			)
 			->if(
-				$this->calling($otherStorable)->storerIsReady = function($serializer) use ($integerProperty, $integer) {
-					$serializer->integerPropertyHasValue($integerProperty, $integer);
+				$this->calling($storable2)->storerIsReady = function($serializer) use ($integer1Property, $integer1) {
+					$serializer->integerPropertyHasValue($integer1Property, $integer1);
 				},
-				$this->calling($storable)->storerIsReady = function($serializer) use ($storableProperty, $otherStorable) {
-					$serializer->storablePropertyHasValue($storableProperty, $otherStorable);
+				$this->calling($storable1)->storerIsReady = function($serializer) use ($storable1Property, $storable2) {
+					$serializer->storablePropertyHasValue($storable1Property, $storable2);
 				}
 			)
 			->then
-				->object($this->testedInstance->serialize($storable))->isEqualTo(new serialization\serialization('{"storableProperty":{"integerProperty":666}}'))
+				->object($this->testedInstance->serialize($storable1))->isEqualTo(new serialization\serialization('{"storable1Property":{"integer1Property":666}}'))
 
 			->given(
-				$arrayProperty = new object\property('arrayProperty')
+				$array1Property = new object\property('array1Property')
 			)
 			->if(
-				$this->calling($storable)->storerIsReady = function($serializer) use ($arrayProperty, $otherStorable) {
-					$serializer->arrayPropertyHasValues($arrayProperty, $otherStorable);
+				$this->calling($storable1)->storerIsReady = function($serializer) use ($array1Property, $storable2) {
+					$serializer->arrayPropertyHasValues($array1Property, $storable2);
 				}
 			)
 			->then
-				->object($this->testedInstance->serialize($storable))->isEqualTo(new serialization\serialization('{"arrayProperty":[{"integerProperty":666}]}'))
+				->object($this->testedInstance->serialize($storable1))->isEqualTo(new serialization\serialization('{"array1Property":[{"integer1Property":666}]}'))
 
 			->given(
-				$nullProperty = new object\property('nullProperty')
+				$storable3 = new \mock\estvoyage\object\storable
 			)
 			->if(
-				$this->calling($storable)->storerIsReady = function($serializer) use ($nullProperty) {
-					$serializer->nullProperty($nullProperty);
+				$this->calling($storable3)->storerIsReady = function($serializer) use ($float1Property, $float1) {
+					$serializer->floatPropertyHasValue($float1Property, $float1);
+				},
+				$this->calling($storable1)->storerIsReady = function($serializer) use ($array1Property, $storable2, $storable3) {
+					$serializer->arrayPropertyHasValues($array1Property, $storable2, $storable3);
 				}
 			)
 			->then
-				->object($this->testedInstance->serialize($storable))->isEqualTo(new serialization\serialization('{"nullProperty":null}'))
+				->object($this->testedInstance->serialize($storable1))->isEqualTo(new serialization\serialization('{"array1Property":[{"integer1Property":666},{"float1Property":666.999}]}'))
+
+			->given(
+				$null1Property = new object\property('null1Property')
+			)
+			->if(
+				$this->calling($storable1)->storerIsReady = function($serializer) use ($null1Property) {
+					$serializer->nullProperty($null1Property);
+				}
+			)
+			->then
+				->object($this->testedInstance->serialize($storable1))->isEqualTo(new serialization\serialization('{"null1Property":null}'))
 
 			->if(
-				$this->calling($storable)->storerIsReady = function($serializer) use (
-						$stringProperty, $string,
-						$integerProperty, $integer,
-						$floatProperty, $float,
-						$booleanProperty, $boolean,
-						$storableProperty, $otherStorable,
-						$arrayProperty,
-						$nullProperty
+				$this->calling($storable1)->storerIsReady = function($serializer) use (
+						$string1Property, $string1,
+						$integer1Property, $integer1,
+						$float1Property, $float1,
+						$boolean1Property, $boolean1,
+						$storable1Property, $storable2,
+						$array1Property,
+						$null1Property
 					) {
 					$serializer
-						->stringPropertyHasValue($stringProperty, $string)
-						->integerPropertyHasValue($integerProperty, $integer)
-						->floatPropertyHasValue($floatProperty, $float)
-						->booleanPropertyHasValue($booleanProperty, $boolean)
-						->storablePropertyHasValue($storableProperty, $otherStorable)
-						->arrayPropertyHasValues($arrayProperty, $otherStorable)
-						->nullProperty($nullProperty)
+						->stringPropertyHasValue($string1Property, $string1)
+						->integerPropertyHasValue($integer1Property, $integer1)
+						->floatPropertyHasValue($float1Property, $float1)
+						->booleanPropertyHasValue($boolean1Property, $boolean1)
+						->storablePropertyHasValue($storable1Property, $storable2)
+						->arrayPropertyHasValues($array1Property, $storable2)
+						->nullProperty($null1Property)
 					;
 				}
 			)
 			->then
 				->object(
-					$this->testedInstance->serialize($storable))->isEqualTo(
+					$this->testedInstance->serialize($storable1))->isEqualTo(
 						new serialization\serialization(
-							'{"stringProperty":"a string","integerProperty":666,"floatProperty":666.999,"booleanProperty":true,"storableProperty":{"integerProperty":666},"arrayProperty":[{"integerProperty":666}],"nullProperty":null}'
+							'{"string1Property":"a string 1","integer1Property":666,"float1Property":666.999,"boolean1Property":true,"storable1Property":{"integer1Property":666},"array1Property":[{"integer1Property":666}],"null1Property":null}'
 						)
 					)
 		;
