@@ -130,7 +130,7 @@ abstract class serializer implements object\storer
 		return $this;
 	}
 
-	function endOfSerialization()
+	private function endOfSerialization()
 	{
 		$serialization = $this->serialization;
 
