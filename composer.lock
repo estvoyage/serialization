@@ -4,8 +4,102 @@
         "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "73b6592b85d5e72ccbf7e5ea76f3e945",
+    "hash": "01011e09113eefdbfee4456a8637bdba",
     "packages": [
+        {
+            "name": "estvoyage/csv",
+            "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/estvoyage/csv.git",
+                "reference": "8a3895b3352c3d10712ae09d9b7d63017381f564"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/estvoyage/csv/zipball/8a3895b3352c3d10712ae09d9b7d63017381f564",
+                "reference": "8a3895b3352c3d10712ae09d9b7d63017381f564",
+                "shasum": ""
+            },
+            "require": {
+                "estvoyage/data": "@dev",
+                "estvoyage/value": "@dev",
+                "php": ">=5.6.0"
+            },
+            "require-dev": {
+                "mageekguy/atoum": "@dev"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "estvoyage\\csv\\": "classes"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "BSD"
+            ],
+            "authors": [
+                {
+                    "name": "Frédéric Hardy",
+                    "email": "frederic.hardy@mageekbox.net",
+                    "homepage": "http://blog.mageekbox.net"
+                }
+            ],
+            "description": "An east-oriented csv generator",
+            "homepage": "http://github.com/estvoyage/csv",
+            "keywords": [
+                "Comma-Separated Values",
+                "East",
+                "csv"
+            ],
+            "time": "2015-02-23 12:56:17"
+        },
+        {
+            "name": "estvoyage/data",
+            "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/estvoyage/data.git",
+                "reference": "c591bc92dda343fce5739326d1e17947b605baae"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/estvoyage/data/zipball/c591bc92dda343fce5739326d1e17947b605baae",
+                "reference": "c591bc92dda343fce5739326d1e17947b605baae",
+                "shasum": ""
+            },
+            "require": {
+                "estvoyage/value": "@dev",
+                "php": ">=5.5.0"
+            },
+            "require-dev": {
+                "mageekguy/atoum": "@dev"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "estvoyage\\data\\": "classes"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "BSD"
+            ],
+            "authors": [
+                {
+                    "name": "Frédéric Hardy",
+                    "email": "frederic.hardy@mageekbox.net",
+                    "homepage": "http://blog.mageekbox.net"
+                }
+            ],
+            "description": "Interfaces and classes to manipulate data in an east-oriented manner",
+            "homepage": "http://github.com/estvoyage/data",
+            "keywords": [
+                "East",
+                "data"
+            ],
+            "time": "2015-02-23 12:52:50"
+        },
         {
             "name": "estvoyage/object",
             "version": "dev-master",
@@ -177,6 +271,8 @@
     "stability-flags": {
         "estvoyage/object": 20,
         "estvoyage/value": 20,
+        "estvoyage/data": 20,
+        "estvoyage/csv": 20,
         "mageekguy/atoum": 20
     },
     "prefer-stable": false,
