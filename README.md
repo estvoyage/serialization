@@ -106,11 +106,17 @@ $console = new console;
 $foo = new foo(uniqid(), 666, 666.999, true, new bar(uniqid()));
 
 (new serialization\serializer\json)
-	->dataConsumerNeedSerializationOfStorable($console->newData(new data\data('As JSON:')), $foo)
+	->dataConsumerNeedSerializationOfStorable(
+		$console->newData(new data\data('As JSON:')),
+		$foo
+	)
 ;
 
 (new serialization\serializer\csv(new csv\generator\rfc4180))
-	->dataConsumerNeedSerializationOfStorable($console->newData(new data\data('As CSV:')), $foo)
+	->dataConsumerNeedSerializationOfStorable(
+		$console->newData(new data\data('As CSV:')),
+		$foo
+	)
 ;
 
 /*
