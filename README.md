@@ -11,7 +11,7 @@ With **serialization**, you can define only one method in each classes to handle
 ## Installation
 
 Minimal PHP version to use **serialization** is 5.6.  
-The recommended way to install Negotiation is through [Composer](http://getcomposer.org/):
+The recommended way to install Negotiation is through [Composer](http://getcomposer.org/), just add this in your `composer.json` and execute `php composer.phar install`:
 
 ``` json
 {
