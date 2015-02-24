@@ -4,10 +4,11 @@ namespace estvoyage\serialization\serializer;
 
 use
 	estvoyage\serialization,
+	estvoyage\data,
 	estvoyage\object
 ;
 
-final class csv extends serialization\serializer
+final class csv extends generic
 {
 	private
 		$header = [],
@@ -15,7 +16,7 @@ final class csv extends serialization\serializer
 		$namespace = []
 	;
 
-	protected function prepareSerialization()
+	protected function init()
 	{
 		$serializer = new self;
 
@@ -72,20 +73,16 @@ final class csv extends serialization\serializer
 		throw new csv\exception('Unable to serialize this kind of data');
 	}
 
-	protected function finalizeSerialization()
+	protected function buildData()
 	{
+		$data = '';
+
 		if (! $this->namespace && $this->header)
 		{
-			$this
-				->serializationIs(
-					new serialization\serialization(
-						join(',', $this->header) . PHP_EOL . join(',', $this->line)
-					)
-				)
-			;
+			$data = join(',', $this->header) . PHP_EOL . join(',', $this->line);
 		}
 
-		return $this;
+		return new data\data($data);
 	}
 
 	private function addPropertyWithValue(object\property $property, $value)

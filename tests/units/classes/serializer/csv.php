@@ -6,8 +6,9 @@ require __DIR__ . '/../../runner.php';
 
 use
 	estvoyage\serialization\tests\units,
-	estvoyage\serialization,
 	estvoyage\object,
+	estvoyage\data,
+	mock\estvoyage\data\consumer,
 	mock\estvoyage\object\storable
 ;
 
@@ -21,10 +22,11 @@ class csv extends units\test
 		;
 	}
 
-	function testSerialize()
+	function testDataConsumerNeedDataFromStorable()
 	{
 		$this
 			->given(
+				$dataConsumer = new consumer,
 				$this->newTestedInstance,
 				$storable1 = new storable
 			)
@@ -33,7 +35,8 @@ class csv extends units\test
 				$this->calling($storable1)->storerIsReady = function($serializer) {}
 			)
 			->then
-				->object($this->testedInstance->serialize($storable1))->isEqualTo(new serialization\serialization)
+				->object($this->testedInstance->dataConsumerNeedDataFromStorable($dataConsumer, $storable1))->isTestedInstance
+				->mock($dataConsumer)->receive('newData')->withArguments(new data\data(''))->once
 
 			->if(
 				$type = new object\type('aType'),
@@ -42,7 +45,8 @@ class csv extends units\test
 				}
 			)
 			->then
-				->object($this->testedInstance->serialize($storable1))->isEqualTo(new serialization\serialization)
+				->object($this->testedInstance->dataConsumerNeedDataFromStorable($dataConsumer, $storable1))->isTestedInstance
+				->mock($dataConsumer)->receive('newData')->withArguments(new data\data(''))->twice
 
 			->given(
 				$string1Property = new object\property('string1Property'),
@@ -55,12 +59,15 @@ class csv extends units\test
 				}
 			)
 			->then
-				->object($this->testedInstance->serialize($storable1))
-					->isEqualTo(
-						new serialization\serialization(
-							'"string1Property"' . PHP_EOL . '"a string 1"'
+				->object($this->testedInstance->dataConsumerNeedDataFromStorable($dataConsumer, $storable1))->isTestedInstance
+				->mock($dataConsumer)
+					->receive('newData')
+						->withArguments(
+							new data\data(
+								'"string1Property"' . PHP_EOL . '"a string 1"'
+							)
 						)
-					)
+							->once
 
 			->if(
 				$this->calling($storable1)->storerIsReady = function($serializer) use ($string1Property, $string1) {
@@ -69,12 +76,15 @@ class csv extends units\test
 				}
 			)
 			->then
-				->object($this->testedInstance->serialize($storable1))
-					->isEqualTo(
-						new serialization\serialization(
-							'"string1Property"' . PHP_EOL . '"a string 1"'
+				->object($this->testedInstance->dataConsumerNeedDataFromStorable($dataConsumer, $storable1))->isTestedInstance
+				->mock($dataConsumer)
+					->receive('newData')
+						->withArguments(
+							new data\data(
+								'"string1Property"' . PHP_EOL . '"a string 1"'
+							)
 						)
-					)
+							->twice
 
 			->given(
 				$string2Property = new object\property('string2Property'),
@@ -87,13 +97,16 @@ class csv extends units\test
 				}
 			)
 			->then
-				->object($this->testedInstance->serialize($storable1))
-					->isEqualTo(
-						new serialization\serialization(
-							'"string1Property","string2Property"' . PHP_EOL .
-							'"a string 1","a string 2"'
+				->object($this->testedInstance->dataConsumerNeedDataFromStorable($dataConsumer, $storable1))->isTestedInstance
+				->mock($dataConsumer)
+					->receive('newData')
+						->withArguments(
+							new data\data(
+								'"string1Property","string2Property"' . PHP_EOL .
+								'"a string 1","a string 2"'
+							)
 						)
-					)
+							->once
 
 			->given(
 				$storable1Property = new object\property('storable1Property'),
@@ -109,13 +122,16 @@ class csv extends units\test
 				}
 			)
 			->then
-				->object($this->testedInstance->serialize($storable1))
-					->isEqualTo(
-						new serialization\serialization(
-							'"storable1Property.string1Property"' . PHP_EOL .
-							'"a string 1"'
+				->object($this->testedInstance->dataConsumerNeedDataFromStorable($dataConsumer, $storable1))->isTestedInstance
+				->mock($dataConsumer)
+					->receive('newData')
+						->withArguments(
+							new data\data(
+								'"storable1Property.string1Property"' . PHP_EOL .
+								'"a string 1"'
+							)
 						)
-					)
+							->once
 
 			->if(
 				$this->calling($storable2)->storerIsReady = function($serializer) use ($string1Property, $string1) {
@@ -129,12 +145,16 @@ class csv extends units\test
 				}
 			)
 			->then
-				->object($this->testedInstance->serialize($storable1))
-					->isEqualTo(new serialization\serialization(
-							'"string1Property","storable1Property.string1Property"' . PHP_EOL .
-							'"a string 1","a string 1"'
+				->object($this->testedInstance->dataConsumerNeedDataFromStorable($dataConsumer, $storable1))->isTestedInstance
+				->mock($dataConsumer)
+					->receive('newData')
+						->withArguments(
+							new data\data(
+								'"string1Property","storable1Property.string1Property"' . PHP_EOL .
+								'"a string 1","a string 1"'
+							)
 						)
-					)
+							->once
 
 			->if(
 				$this->calling($storable1)->storerIsReady = function($serializer) use (
@@ -150,12 +170,16 @@ class csv extends units\test
 				}
 			)
 			->then
-				->object($this->testedInstance->serialize($storable1))
-					->isEqualTo(new serialization\serialization(
-							'"string1Property","storable1Property.string1Property","string2Property"' . PHP_EOL .
-							'"a string 1","a string 1","a string 2"'
+				->object($this->testedInstance->dataConsumerNeedDataFromStorable($dataConsumer, $storable1))->isTestedInstance
+				->mock($dataConsumer)
+					->receive('newData')
+						->withArguments(
+							new data\data(
+								'"string1Property","storable1Property.string1Property","string2Property"' . PHP_EOL .
+								'"a string 1","a string 1","a string 2"'
+							)
 						)
-					)
+							->once
 
 			->given(
 				$arrayProperty = new object\property('arrayProperty'),
@@ -171,7 +195,7 @@ class csv extends units\test
 				}
 			)
 			->then
-				->exception(function() use ($storable1) { $this->testedInstance->serialize($storable1); })
+				->exception(function() use ($dataConsumer, $storable1) { $this->testedInstance->dataConsumerNeedDataFromStorable($dataConsumer, $storable1); })
 					->isInstanceOf('estvoyage\serialization\serializer\csv\exception')
 					->hasMessage('Unable to serialize this kind of data')
 
@@ -187,13 +211,16 @@ class csv extends units\test
 				}
 			)
 			->then
-				->object($this->testedInstance->serialize($storable1))
-					->isEqualTo(
-						new serialization\serialization(
-							'"integer1Property"' . PHP_EOL .
-							'666'
+				->object($this->testedInstance->dataConsumerNeedDataFromStorable($dataConsumer, $storable1))->isTestedInstance
+				->mock($dataConsumer)
+					->receive('newData')
+						->withArguments(
+							new data\data(
+								'"integer1Property"' . PHP_EOL .
+								'666'
+							)
 						)
-					)
+							->once
 
 			->given(
 				$float1Property = new object\property('float1Property'),
@@ -207,13 +234,16 @@ class csv extends units\test
 				}
 			)
 			->then
-				->object($this->testedInstance->serialize($storable1))
-					->isEqualTo(
-						new serialization\serialization(
-							'"float1Property"' . PHP_EOL .
-							'666.999'
+				->object($this->testedInstance->dataConsumerNeedDataFromStorable($dataConsumer, $storable1))->isTestedInstance
+				->mock($dataConsumer)
+					->receive('newData')
+						->withArguments(
+							new data\data(
+								'"float1Property"' . PHP_EOL .
+								'666.999'
+							)
 						)
-					)
+							->once
 
 			->given(
 				$boolean1Property = new object\property('boolean1Property'),
@@ -227,13 +257,16 @@ class csv extends units\test
 				}
 			)
 			->then
-				->object($this->testedInstance->serialize($storable1))
-					->isEqualTo(
-						new serialization\serialization(
-							'"boolean1Property"' . PHP_EOL .
-							'0'
+				->object($this->testedInstance->dataConsumerNeedDataFromStorable($dataConsumer, $storable1))->isTestedInstance
+				->mock($dataConsumer)
+					->receive('newData')
+						->withArguments(
+							new data\data(
+								'"boolean1Property"' . PHP_EOL .
+								'0'
+							)
 						)
-					)
+							->once
 
 			->given(
 				$boolean2Property = new object\property('boolean2Property'),
@@ -247,13 +280,16 @@ class csv extends units\test
 				}
 			)
 			->then
-				->object($this->testedInstance->serialize($storable2))
-					->isEqualTo(
-						new serialization\serialization(
-							'"boolean2Property"' . PHP_EOL .
-							'1'
+				->object($this->testedInstance->dataConsumerNeedDataFromStorable($dataConsumer, $storable2))->isTestedInstance
+				->mock($dataConsumer)
+					->receive('newData')
+						->withArguments(
+							new data\data(
+								'"boolean2Property"' . PHP_EOL .
+								'1'
+							)
 						)
-					)
+							->once
 
 			->given(
 				$nullProperty = new object\property('nullProperty')
@@ -266,13 +302,16 @@ class csv extends units\test
 				}
 			)
 			->then
-				->object($this->testedInstance->serialize($storable2))
-					->isEqualTo(
-						new serialization\serialization(
-							'"nullProperty"' . PHP_EOL .
-							''
+				->object($this->testedInstance->dataConsumerNeedDataFromStorable($dataConsumer, $storable2))->isTestedInstance
+				->mock($dataConsumer)
+					->receive('newData')
+						->withArguments(
+							new data\data(
+								'"nullProperty"' . PHP_EOL .
+								''
+							)
 						)
-					)
+							->once
 		;
 	}
 }

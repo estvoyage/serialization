@@ -3,18 +3,18 @@
 namespace estvoyage\serialization\serializer;
 
 use
-	estvoyage\object,
-	estvoyage\serialization
+	estvoyage\data,
+	estvoyage\object
 ;
 
-final class json extends serialization\serializer
+final class json extends generic
 {
 	private
 		$delimiter = '',
 		$buffer = ''
 	;
 
-	protected function prepareSerialization()
+	protected function init()
 	{
 		return new self;
 	}
@@ -48,18 +48,18 @@ final class json extends serialization\serializer
 		$this->serializeProperty($property, $this->serialize($storable));
 	}
 
-	protected function serializeArrayPropertyWithValues(object\property $property, object\storable $storable, object\storable... $storables)
+	protected function serializeArrayPropertyWithValues(object\property $property, object\storable $firstStorable, object\storable... $storables)
 	{
-		$serialization = [];
+		array_unshift($storables, $firstStorable);
 
-		array_unshift($storables, $storable);
+		$json = [];
 
 		foreach ($storables as $storable)
 		{
-			$serialization[] = $this->serialize($storable);
+			$json[] = $this->serialize($storable);
 		}
 
-		$this->serializeProperty($property, '[' . join(',', $serialization) . ']');
+		$this->serializeProperty($property, '[' . join(',', $json) . ']');
 	}
 
 	protected function serializeNullProperty(object\property $property)
@@ -67,9 +67,9 @@ final class json extends serialization\serializer
 		$this->serializeProperty($property, json_encode(null));
 	}
 
-	protected function finalizeSerialization()
+	protected function buildData()
 	{
-		return $this->serializationIs(new serialization\serialization('{' . $this->buffer . '}'));
+		return new data\data('{' . $this->buffer . '}');
 	}
 
 	private function serializeProperty($property, $json)
