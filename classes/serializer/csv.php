@@ -8,26 +8,48 @@ use
 	estvoyage\object
 ;
 
-final class csv extends generic
+final class csv extends generic implements \estvoyage\csv\record\provider
 {
 	private
 		$header = [],
 		$line = [],
-		$namespace = []
+		$namespace = [],
+		$csvGenerator
 	;
+
+	function __construct(\estvoyage\csv\generator $csvGenerator = null)
+	{
+		$this->csvGenerator = $csvGenerator;
+	}
+
+	function dataConsumerNeedSerializationOfStorable(data\consumer $dataConsumer, object\storable $storable)
+	{
+		$this
+			->serialize($storable)
+			->sendDataToConsumer($dataConsumer)
+		;
+
+		return $this;
+	}
+
+	function useCsvGenerator(\estvoyage\csv\generator $generator)
+	{
+		if ($this->header)
+		{
+			$generator
+				->newCsvRecords(
+					new \estvoyage\csv\record(...$this->header),
+					new \estvoyage\csv\record(...$this->line)
+				)
+			;
+		}
+
+		return $this;
+	}
 
 	protected function init()
 	{
-		$serializer = new self;
-
-		if ($this->namespace)
-		{
-			$serializer->header = & $this->header;
-			$serializer->line = & $this->line;
-			$serializer->namespace = & $this->namespace;
-		}
-
-		return $serializer;
+		return $this->namespace ? $this : new self($this->csvGenerator);
 	}
 
 	protected function serializeType(object\type $type)
@@ -36,7 +58,7 @@ final class csv extends generic
 
 	protected function serializeStringPropertyWithValue(object\property $property, object\property\string $string)
 	{
-		$this->addPropertyWithValue($property, '"' . $string . '"');
+		$this->addPropertyWithValue($property, $string);
 	}
 
 	protected function serializeIntegerPropertyWithValue(object\property $property, object\property\integer $integer)
@@ -73,30 +95,19 @@ final class csv extends generic
 		throw new csv\exception('Unable to serialize this kind of data');
 	}
 
-	protected function buildData()
+	private function sendDataToConsumer(data\consumer $dataConsumer)
 	{
-		$data = '';
-
-		if (! $this->namespace && $this->header)
-		{
-			$data = join(',', $this->header) . PHP_EOL . join(',', $this->line);
-		}
-
-		return new data\data($data);
+		! $this->header
+			?
+			$dataConsumer->newData(new data\data(''))
+			:
+			$this->csvGenerator->forwardRecordFromProviderToDataConsumer($this, $dataConsumer)
+		;
 	}
 
 	private function addPropertyWithValue(object\property $property, $value)
 	{
-		$property = '"' . (! $this->namespace ? '' : join('.', $this->namespace) . '.') . $property . '"';
-
-		$key = array_search($property, $this->header);
-
-		if ($key === false)
-		{
-			$key = sizeof($this->header);
-			$this->header[$key] = $property;
-		}
-
-		$this->line[$key] = $value;
+		$this->header[] = new data\data((! $this->namespace ? '' : join('.', $this->namespace) . '.') . $property);
+		$this->line[] = new data\data((string) $value);
 	}
 }

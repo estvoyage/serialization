@@ -15,13 +15,6 @@ abstract class generic implements serialization\serializer
 		$serializer
 	;
 
-	function dataConsumerNeedDataFromStorable(data\consumer $dataConsumer, object\storable $storable)
-	{
-		$dataConsumer->newData($this->serialize($storable));
-
-		return $this;
-	}
-
 	final function typeIs(object\type $type)
 	{
 		$this
@@ -111,7 +104,6 @@ abstract class generic implements serialization\serializer
 	protected abstract function serializeStorablePropertyWithValue(object\property $property, object\storable $storable);
 	protected abstract function serializeArrayPropertyWithValues(object\property $property, object\storable $storable, object\storable... $storables);
 	protected abstract function serializeNullProperty(object\property $property);
-	protected abstract function buildData();
 
 	final protected function serialize(object\storable $storable)
 	{
@@ -120,7 +112,6 @@ abstract class generic implements serialization\serializer
 				->init()
 					->setSerializer()
 						->notifyStorable($storable)
-							->buildData()
 		;
 	}
 
