@@ -4,7 +4,7 @@
 	"description": "An east-oriented serialization interface",
 	"keywords": [ "Serialization", "East" ],
 	"homepage": "http://github.com/estvoyage/serialization",
-	"license": "BSD",
+	"license": "BSD-2-Clause",
 	"authors": [
 		{
 			"name": "Frédéric Hardy",
