@@ -13,7 +13,7 @@ class console implements data\consumer
 {
 	function newData(data\data $data)
 	{
-		echo $data . PHP_EOL;
+		echo $data;
 
 		return $this;
 	}
@@ -76,15 +76,17 @@ $console = new console;
 $foo = new foo(uniqid(), 666, 666.999, true, new bar(uniqid()));
 
 (new serialization\serializer\json)
-	->dataConsumerNeedSerializationOfStorable(
-		$console->newData(new data\data('As JSON:')),
+	->dataConsumerNeedStorable(
+		$console->newData(new data\data('As JSON:' . PHP_EOL)),
 		$foo
 	)
 ;
 
+$console->newData(new data\data(PHP_EOL));
+
 (new serialization\serializer\csv(new csv\generator\rfc4180))
-	->dataConsumerNeedSerializationOfStorable(
-		$console->newData(new data\data('As CSV:')),
+	->dataConsumerNeedStorable(
+		$console->newData(new data\data('As CSV:' . PHP_EOL)),
 		$foo
 	)
 ;

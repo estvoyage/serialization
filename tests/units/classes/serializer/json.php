@@ -139,7 +139,7 @@ class json extends units\test
 		;
 	}
 
-	function testDataConsumerNeedDataFromStorable()
+	function testDataConsumerNeedStorable()
 	{
 		$this
 			->given(
@@ -152,7 +152,7 @@ class json extends units\test
 				$this->calling($storable1)->storerIsReady = function($serializer) {}
 			)
 			->then
-				->object($this->testedInstance->dataConsumerNeedSerializationOfStorable($dataConsumer, $storable1))->isTestedInstance
+				->object($this->testedInstance->dataConsumerNeedStorable($dataConsumer, $storable1))->isTestedInstance
 				->mock($dataConsumer)->receive('newData')->withArguments(new data\data('{}'))->once
 
 			->if(
@@ -162,7 +162,7 @@ class json extends units\test
 				}
 			)
 			->then
-				->object($this->testedInstance->dataConsumerNeedSerializationOfStorable($dataConsumer, $storable1))->isTestedInstance
+				->object($this->testedInstance->dataConsumerNeedStorable($dataConsumer, $storable1))->isTestedInstance
 				->mock($dataConsumer)->receive('newData')->withArguments(new data\data('{}'))->twice
 
 			->given(
@@ -175,7 +175,7 @@ class json extends units\test
 				}
 			)
 			->then
-				->object($this->testedInstance->dataConsumerNeedSerializationOfStorable($dataConsumer, $storable1))->isTestedInstance
+				->object($this->testedInstance->dataConsumerNeedStorable($dataConsumer, $storable1))->isTestedInstance
 				->mock($dataConsumer)->receive('newData')->withArguments(new data\data('{"string1Property":"a string 1"}'))->once
 
 			->given(
@@ -188,7 +188,7 @@ class json extends units\test
 				}
 			)
 			->then
-				->object($this->testedInstance->dataConsumerNeedSerializationOfStorable($dataConsumer, $storable1))->isTestedInstance
+				->object($this->testedInstance->dataConsumerNeedStorable($dataConsumer, $storable1))->isTestedInstance
 				->mock($dataConsumer)->receive('newData')->withArguments(new data\data('{"integer1Property":666}'))->once
 
 			->given(
@@ -201,7 +201,7 @@ class json extends units\test
 				}
 			)
 			->then
-				->object($this->testedInstance->dataConsumerNeedSerializationOfStorable($dataConsumer, $storable1))->isTestedInstance
+				->object($this->testedInstance->dataConsumerNeedStorable($dataConsumer, $storable1))->isTestedInstance
 				->mock($dataConsumer)->receive('newData')->withArguments(new data\data('{"float1Property":666.999}'))->once
 
 			->given(
@@ -214,7 +214,7 @@ class json extends units\test
 				}
 			)
 			->then
-				->object($this->testedInstance->dataConsumerNeedSerializationOfStorable($dataConsumer, $storable1))->isTestedInstance
+				->object($this->testedInstance->dataConsumerNeedStorable($dataConsumer, $storable1))->isTestedInstance
 				->mock($dataConsumer)->receive('newData')->withArguments(new data\data('{"boolean1Property":false}'))->once
 
 			->given(
@@ -226,7 +226,7 @@ class json extends units\test
 				}
 			)
 			->then
-				->object($this->testedInstance->dataConsumerNeedSerializationOfStorable($dataConsumer, $storable1))->isTestedInstance
+				->object($this->testedInstance->dataConsumerNeedStorable($dataConsumer, $storable1))->isTestedInstance
 				->mock($dataConsumer)->receive('newData')->withArguments(new data\data('{"boolean1Property":true}'))->once
 
 			->given(
@@ -242,7 +242,7 @@ class json extends units\test
 				}
 			)
 			->then
-				->object($this->testedInstance->dataConsumerNeedSerializationOfStorable($dataConsumer, $storable1))->isTestedInstance
+				->object($this->testedInstance->dataConsumerNeedStorable($dataConsumer, $storable1))->isTestedInstance
 				->mock($dataConsumer)->receive('newData')->withArguments(new data\data('{"storable1Property":{"integer1Property":666}}'))->once
 
 			->given(
@@ -254,7 +254,7 @@ class json extends units\test
 				}
 			)
 			->then
-				->object($this->testedInstance->dataConsumerNeedSerializationOfStorable($dataConsumer, $storable1))->isTestedInstance
+				->object($this->testedInstance->dataConsumerNeedStorable($dataConsumer, $storable1))->isTestedInstance
 				->mock($dataConsumer)->receive('newData')->withArguments(new data\data('{"array1Property":[{"integer1Property":666}]}'))->once
 
 			->given(
@@ -269,7 +269,7 @@ class json extends units\test
 				}
 			)
 			->then
-				->object($this->testedInstance->dataConsumerNeedSerializationOfStorable($dataConsumer, $storable1))->isTestedInstance
+				->object($this->testedInstance->dataConsumerNeedStorable($dataConsumer, $storable1))->isTestedInstance
 				->mock($dataConsumer)->receive('newData')->withArguments(new data\data('{"array1Property":[{"integer1Property":666},{"float1Property":666.999}]}'))->once
 
 			->given(
@@ -281,7 +281,7 @@ class json extends units\test
 				}
 			)
 			->then
-				->object($this->testedInstance->dataConsumerNeedSerializationOfStorable($dataConsumer, $storable1))->isTestedinstance
+				->object($this->testedInstance->dataConsumerNeedStorable($dataConsumer, $storable1))->isTestedinstance
 				->mock($dataConsumer)->receive('newData')->withArguments(new data\data('{"null1Property":null}'))->once
 
 			->if(
@@ -306,7 +306,7 @@ class json extends units\test
 				}
 			)
 			->then
-				->object($this->testedInstance->dataConsumerNeedSerializationOfStorable($dataConsumer, $storable1))->isTestedInstance
+				->object($this->testedInstance->dataConsumerNeedStorable($dataConsumer, $storable1))->isTestedInstance
 				->mock($dataConsumer)
 					->receive('newData')
 						->withArguments(new data\data(

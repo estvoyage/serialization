@@ -15,7 +15,7 @@ abstract class generic implements serialization\serializer
 		$dataConsumer
 	;
 
-	final function dataConsumerNeedSerializationOfStorable(data\consumer $dataConsumer, object\storable $storable)
+	final function dataConsumerNeedStorable(data\consumer $dataConsumer, object\storable $storable)
 	{
 		$this
 			->serializerForDataConsumerIs($dataConsumer, $this->serializerReadyToSerialize())

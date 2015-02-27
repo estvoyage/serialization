@@ -9,5 +9,5 @@ use
 
 interface serializer extends object\storer
 {
-	function dataConsumerNeedSerializationOfStorable(data\consumer $dataConsumer, object\storable $storable);
+	function dataConsumerNeedStorable(data\consumer $dataConsumer, object\storable $storable);
 }
