@@ -12,12 +12,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/estvoyage/csv.git",
-                "reference": "0707b3ae8d0d21cbf677de2a3bc14c8b49536945"
+                "reference": "df520c60f4cea785bb8f33c02fd9232f2d1ca39c"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/estvoyage/csv/zipball/0707b3ae8d0d21cbf677de2a3bc14c8b49536945",
-                "reference": "0707b3ae8d0d21cbf677de2a3bc14c8b49536945",
+                "url": "https://api.github.com/repos/estvoyage/csv/zipball/df520c60f4cea785bb8f33c02fd9232f2d1ca39c",
+                "reference": "df520c60f4cea785bb8f33c02fd9232f2d1ca39c",
                 "shasum": ""
             },
             "require": {
@@ -52,7 +52,7 @@
                 "East",
                 "csv"
             ],
-            "time": "2015-02-26 21:22:48"
+            "time": "2015-02-27 20:32:09"
         },
         {
             "name": "estvoyage/data",
@@ -60,12 +60,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/estvoyage/data.git",
-                "reference": "7ab407768f17f8acf6232d59e26f76f630963eb3"
+                "reference": "da00b70ea440dedbbb83dcf5168ff80e2101798a"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/estvoyage/data/zipball/7ab407768f17f8acf6232d59e26f76f630963eb3",
-                "reference": "7ab407768f17f8acf6232d59e26f76f630963eb3",
+                "url": "https://api.github.com/repos/estvoyage/data/zipball/da00b70ea440dedbbb83dcf5168ff80e2101798a",
+                "reference": "da00b70ea440dedbbb83dcf5168ff80e2101798a",
                 "shasum": ""
             },
             "require": {
@@ -98,7 +98,7 @@
                 "East",
                 "data"
             ],
-            "time": "2015-02-26 12:07:09"
+            "time": "2015-02-27 20:34:16"
         },
         {
             "name": "estvoyage/object",
