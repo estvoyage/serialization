@@ -8,7 +8,7 @@ use
 	estvoyage\object
 ;
 
-final class csv extends generic implements \estvoyage\csv\record\provider
+final class csv extends generic
 {
 	private
 		$header = [],
@@ -22,32 +22,7 @@ final class csv extends generic implements \estvoyage\csv\record\provider
 		$this->csvGenerator = $csvGenerator;
 	}
 
-	function dataConsumerNeedSerializationOfStorable(data\consumer $dataConsumer, object\storable $storable)
-	{
-		$this
-			->serialize($storable)
-			->sendDataToConsumer($dataConsumer)
-		;
-
-		return $this;
-	}
-
-	function useCsvGenerator(\estvoyage\csv\generator $generator)
-	{
-		if ($this->header)
-		{
-			$generator
-				->newCsvRecords(
-					new \estvoyage\csv\record(...$this->header),
-					new \estvoyage\csv\record(...$this->line)
-				)
-			;
-		}
-
-		return $this;
-	}
-
-	protected function init()
+	protected function serializerReadyToSerialize()
 	{
 		return $this->namespace ? $this : new self($this->csvGenerator);
 	}
@@ -80,7 +55,7 @@ final class csv extends generic implements \estvoyage\csv\record\provider
 	{
 		$this->namespace[] = $property;
 
-		$this->serialize($storable);
+		$this->newStorable($storable);
 
 		array_pop($this->namespace);
 	}
@@ -95,14 +70,17 @@ final class csv extends generic implements \estvoyage\csv\record\provider
 		throw new csv\exception('Unable to serialize this kind of data');
 	}
 
-	private function sendDataToConsumer(data\consumer $dataConsumer)
+	protected function dataConsumerIs(data\consumer $dataConsumer)
 	{
-		! $this->header
-			?
-			$dataConsumer->newData(new data\data(''))
-			:
-			$this->csvGenerator->forwardRecordFromProviderToDataConsumer($this, $dataConsumer)
-		;
+		if (! $this->namespace && $this->header)
+		{
+			$this->csvGenerator
+				->dataConsumerNeedCsvRecord($dataConsumer, new \estvoyage\csv\record\line(...$this->header))
+				->dataConsumerNeedCsvRecord($dataConsumer, new \estvoyage\csv\record\line(...$this->line))
+			;
+		}
+
+		return $this;
 	}
 
 	private function addPropertyWithValue(object\property $property, $value)

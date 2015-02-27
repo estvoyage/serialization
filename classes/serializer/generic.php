@@ -12,13 +12,24 @@ use
 abstract class generic implements serialization\serializer
 {
 	private
-		$serializer
+		$dataConsumer
 	;
+
+	final function dataConsumerNeedSerializationOfStorable(data\consumer $dataConsumer, object\storable $storable)
+	{
+		$this
+			->serializerForDataConsumerIs($dataConsumer, $this->serializerReadyToSerialize())
+				->storableIs($storable)
+					->dataConsumerIs($dataConsumer)
+		;
+
+		return $this;
+	}
 
 	final function typeIs(object\type $type)
 	{
 		$this
-			->ifSerializationInProgress()
+			->ifDataConsumer()
 				->serializeType($type)
 		;
 
@@ -28,7 +39,7 @@ abstract class generic implements serialization\serializer
 	final function stringPropertyHasValue(object\property $property, object\property\string $string)
 	{
 		$this
-			->ifSerializationInProgress()
+			->ifDataConsumer()
 				->serializeStringPropertyWithValue($property, $string)
 		;
 
@@ -38,7 +49,7 @@ abstract class generic implements serialization\serializer
 	final function integerPropertyHasValue(object\property $property, object\property\integer $integer)
 	{
 		$this
-			->ifSerializationInProgress()
+			->ifDataConsumer()
 				->serializeIntegerPropertyWithValue($property, $integer)
 		;
 
@@ -48,7 +59,7 @@ abstract class generic implements serialization\serializer
 	final function floatPropertyHasValue(object\property $property, object\property\float $float)
 	{
 		$this
-			->ifSerializationInProgress()
+			->ifDataConsumer()
 				->serializeFloatPropertyWithValue($property, $float)
 		;
 
@@ -58,7 +69,7 @@ abstract class generic implements serialization\serializer
 	final function booleanPropertyHasValue(object\property $property, object\property\boolean $boolean)
 	{
 		$this
-			->ifSerializationInProgress()
+			->ifDataConsumer()
 				->serializeBooleanPropertyWithValue($property, $boolean)
 		;
 
@@ -68,7 +79,7 @@ abstract class generic implements serialization\serializer
 	final function storablePropertyHasValue(object\property $property, object\storable $storable)
 	{
 		$this
-			->ifSerializationInProgress()
+			->ifDataConsumer()
 				->serializeStorablePropertyWithValue($property, $storable)
 		;
 
@@ -78,7 +89,7 @@ abstract class generic implements serialization\serializer
 	final function arrayPropertyHasValues(object\property $property, object\storable $storable, object\storable... $storables)
 	{
 		$this
-			->ifSerializationInProgress()
+			->ifDataConsumer()
 				->serializeArrayPropertyWithValues($property, $storable, ...$storables)
 		;
 
@@ -88,14 +99,42 @@ abstract class generic implements serialization\serializer
 	final function nullProperty(object\property $property)
 	{
 		$this
-			->ifSerializationInProgress()
+			->ifDataConsumer()
 				->serializeNullProperty($property)
 		;
 
 		return $this;
 	}
 
-	protected abstract function init();
+	final protected function serializerForDataConsumerIs(data\consumer $dataConsumer, self $serializer)
+	{
+		$serializer->dataConsumer = $dataConsumer;
+
+		return $serializer;
+	}
+
+	final protected function ifDataConsumer()
+	{
+		if (! $this->dataConsumer)
+		{
+			throw new exception\logic('Data consumer is undefined');
+		}
+
+		return $this;
+	}
+
+	final protected function newStorable(object\storable $storable)
+	{
+		$serializer = $this->serializerForDataConsumerIs($this->dataConsumer, $this->serializerReadyToSerialize());
+
+		$serializer
+				->storableIs($storable)
+				->dataConsumerIs($this->dataConsumer)
+		;
+
+		return $serializer;
+	}
+
 	protected abstract function serializeType(object\type $type);
 	protected abstract function serializeStringPropertyWithValue(object\property $property, object\property\string $string);
 	protected abstract function serializeIntegerPropertyWithValue(object\property $property, object\property\integer $integer);
@@ -104,38 +143,12 @@ abstract class generic implements serialization\serializer
 	protected abstract function serializeStorablePropertyWithValue(object\property $property, object\storable $storable);
 	protected abstract function serializeArrayPropertyWithValues(object\property $property, object\storable $storable, object\storable... $storables);
 	protected abstract function serializeNullProperty(object\property $property);
+	protected abstract function dataConsumerIs(data\consumer $dataConsumer);
 
-	final protected function serialize(object\storable $storable)
-	{
-		return
-			$this
-				->init()
-					->setSerializer()
-						->notifyStorable($storable)
-		;
-	}
-
-	final protected function ifSerializationInProgress()
-	{
-		if (! $this->serializer)
-		{
-			throw new exception\logic('Serializer is not started');
-		}
-
-		return $this->serializer;
-	}
-
-	private function notifyStorable(object\storable $storable)
+	private function storableIs(object\storable $storable)
 	{
 		$storable->storerIsReady($this);
 
 		return $this;
-	}
-
-	private function setSerializer()
-	{
-		$this->serializer = $this;
-
-		return $this->serializer;
 	}
 }

@@ -11,19 +11,16 @@ final class json extends generic
 {
 	private
 		$delimiter = '',
-		$buffer = ''
+		$buffer = '',
+		$depth = 0
 	;
 
-	function dataConsumerNeedSerializationOfStorable(data\consumer $dataConsumer, object\storable $storable)
+	protected function serializerReadyToSerialize()
 	{
-		$dataConsumer->newData($this->serialize($storable)->buildData());
+		$serializer = new self;
+		$serializer->depth = $this->depth + 1;
 
-		return $this;
-	}
-
-	protected function init()
-	{
-		return new self;
+		return $serializer;
 	}
 
 	protected function serializeType(object\type $type)
@@ -52,7 +49,7 @@ final class json extends generic
 
 	protected function serializeStorablePropertyWithValue(object\property $property, object\storable $storable)
 	{
-		$this->serializeProperty($property, $this->serialize($storable)->buildData());
+		$this->serializeProperty($property, $this->newStorable($storable)->buffer);
 	}
 
 	protected function serializeArrayPropertyWithValues(object\property $property, object\storable $firstStorable, object\storable... $storables)
@@ -63,7 +60,7 @@ final class json extends generic
 
 		foreach ($storables as $storable)
 		{
-			$json[] = $this->serialize($storable)->buildData();
+			$json[] = $this->newStorable($storable)->buffer;
 		}
 
 		$this->serializeProperty($property, '[' . join(',', $json) . ']');
@@ -74,9 +71,14 @@ final class json extends generic
 		$this->serializeProperty($property, json_encode(null));
 	}
 
-	protected function buildData()
+	protected function dataConsumerIs(data\consumer $dataConsumer)
 	{
-		return new data\data('{' . $this->buffer . '}');
+		$this->buffer = '{' . $this->buffer . '}';
+
+		if ($this->depth == 1)
+		{
+			$dataConsumer->newData(new data\data($this->buffer));
+		}
 	}
 
 	private function serializeProperty($property, $json)

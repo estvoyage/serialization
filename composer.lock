@@ -4,7 +4,7 @@
         "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "01011e09113eefdbfee4456a8637bdba",
+    "hash": "22df81966e55268829b01d6bfe8d728e",
     "packages": [
         {
             "name": "estvoyage/csv",
@@ -12,12 +12,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/estvoyage/csv.git",
-                "reference": "114f363beaaed3592509cdd7caadd7ec1f47d4d6"
+                "reference": "3194f7dbcfbb7123756249f647980b5fdd71d8a5"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/estvoyage/csv/zipball/114f363beaaed3592509cdd7caadd7ec1f47d4d6",
-                "reference": "114f363beaaed3592509cdd7caadd7ec1f47d4d6",
+                "url": "https://api.github.com/repos/estvoyage/csv/zipball/3194f7dbcfbb7123756249f647980b5fdd71d8a5",
+                "reference": "3194f7dbcfbb7123756249f647980b5fdd71d8a5",
                 "shasum": ""
             },
             "require": {
@@ -36,7 +36,7 @@
             },
             "notification-url": "https://packagist.org/downloads/",
             "license": [
-                "BSD"
+                "BSD-2-Clause"
             ],
             "authors": [
                 {
@@ -52,7 +52,7 @@
                 "East",
                 "csv"
             ],
-            "time": "2015-02-24 20:56:26"
+            "time": "2015-02-26 21:18:43"
         },
         {
             "name": "estvoyage/data",
@@ -60,12 +60,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/estvoyage/data.git",
-                "reference": "c591bc92dda343fce5739326d1e17947b605baae"
+                "reference": "7ab407768f17f8acf6232d59e26f76f630963eb3"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/estvoyage/data/zipball/c591bc92dda343fce5739326d1e17947b605baae",
-                "reference": "c591bc92dda343fce5739326d1e17947b605baae",
+                "url": "https://api.github.com/repos/estvoyage/data/zipball/7ab407768f17f8acf6232d59e26f76f630963eb3",
+                "reference": "7ab407768f17f8acf6232d59e26f76f630963eb3",
                 "shasum": ""
             },
             "require": {
@@ -83,7 +83,7 @@
             },
             "notification-url": "https://packagist.org/downloads/",
             "license": [
-                "BSD"
+                "BSD-2-Clause"
             ],
             "authors": [
                 {
@@ -98,7 +98,7 @@
                 "East",
                 "data"
             ],
-            "time": "2015-02-23 12:52:50"
+            "time": "2015-02-26 12:07:09"
         },
         {
             "name": "estvoyage/object",
@@ -106,12 +106,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/estvoyage/object.git",
-                "reference": "cc0c62f59e8d8f34e6b23ac07d1a5b8ef7a13c6b"
+                "reference": "ee947c0520a956c9214b99ee0f4154b684a367b3"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/estvoyage/object/zipball/cc0c62f59e8d8f34e6b23ac07d1a5b8ef7a13c6b",
-                "reference": "cc0c62f59e8d8f34e6b23ac07d1a5b8ef7a13c6b",
+                "url": "https://api.github.com/repos/estvoyage/object/zipball/ee947c0520a956c9214b99ee0f4154b684a367b3",
+                "reference": "ee947c0520a956c9214b99ee0f4154b684a367b3",
                 "shasum": ""
             },
             "require": {
@@ -129,7 +129,7 @@
             },
             "notification-url": "https://packagist.org/downloads/",
             "license": [
-                "BSD"
+                "BSD-2-Clause"
             ],
             "authors": [
                 {
@@ -144,7 +144,7 @@
                 "East",
                 "object"
             ],
-            "time": "2015-02-17 20:13:36"
+            "time": "2015-02-26 12:05:06"
         },
         {
             "name": "estvoyage/value",
@@ -152,12 +152,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/estvoyage/value.git",
-                "reference": "6263897e14159a9d719d66059824402d348dbd88"
+                "reference": "cb88b1423eb143ef60bce69a3cd1bacd8f60c8c6"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/estvoyage/value/zipball/6263897e14159a9d719d66059824402d348dbd88",
-                "reference": "6263897e14159a9d719d66059824402d348dbd88",
+                "url": "https://api.github.com/repos/estvoyage/value/zipball/cb88b1423eb143ef60bce69a3cd1bacd8f60c8c6",
+                "reference": "cb88b1423eb143ef60bce69a3cd1bacd8f60c8c6",
                 "shasum": ""
             },
             "require": {
@@ -169,13 +169,12 @@
             "type": "library",
             "autoload": {
                 "psr-4": {
-                    "estvoyage\\value\\tests\\units\\": "tests/units",
                     "estvoyage\\value\\": "classes"
                 }
             },
             "notification-url": "https://packagist.org/downloads/",
             "license": [
-                "BSD"
+                "BSD-2-Clause"
             ],
             "authors": [
                 {
@@ -192,7 +191,7 @@
                 "Whole value",
                 "value"
             ],
-            "time": "2015-02-17 19:57:19"
+            "time": "2015-02-26 12:04:10"
         }
     ],
     "packages-dev": [
@@ -202,7 +201,7 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/mageekguy/atoum.git",
-                "reference": "6551465a870584e6fbdc5646160762179254cc4a"
+                "reference": "da4a6926c7e721834bea45e6be081bbe4b9c8d76"
             },
             "require": {
                 "ext-hash": "*",
@@ -230,7 +229,7 @@
                 ]
             },
             "license": [
-                "BSD"
+                "BSD-2-Clause"
             ],
             "authors": [
                 {
@@ -263,7 +262,7 @@
                 "test",
                 "unit testing"
             ],
-            "time": "2015-02-17 20:15:58"
+            "time": "2015-02-26 12:08:02"
         }
     ],
     "aliases": [],

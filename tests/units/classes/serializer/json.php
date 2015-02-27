@@ -34,7 +34,7 @@ class json extends units\test
 			->then
 				->exception(function() use ($type) { $this->testedInstance->typeIs($type); })
 					->isInstanceOf('estvoyage\serialization\exception\logic')
-					->hasMessage('Serializer is not started')
+					->hasMessage('Data consumer is undefined')
 		;
 	}
 
@@ -51,7 +51,7 @@ class json extends units\test
 			->then
 				->exception(function() use ($property, $string1) { $this->testedInstance->stringPropertyHasValue($property, $string1); })
 					->isInstanceOf('estvoyage\serialization\exception\logic')
-					->hasMessage('Serializer is not started')
+					->hasMessage('Data consumer is undefined')
 		;
 	}
 
@@ -68,7 +68,7 @@ class json extends units\test
 			->then
 				->exception(function() use ($property, $integer1) { $this->testedInstance->integerPropertyHasValue($property, $integer1); })
 					->isInstanceOf('estvoyage\serialization\exception\logic')
-					->hasMessage('Serializer is not started')
+					->hasMessage('Data consumer is undefined')
 		;
 	}
 
@@ -85,7 +85,7 @@ class json extends units\test
 			->then
 				->exception(function() use ($property, $float1) { $this->testedInstance->floatPropertyHasValue($property, $float1); })
 					->isInstanceOf('estvoyage\serialization\exception\logic')
-					->hasMessage('Serializer is not started')
+					->hasMessage('Data consumer is undefined')
 		;
 	}
 
@@ -102,7 +102,7 @@ class json extends units\test
 			->then
 				->exception(function() use ($property, $boolean1) { $this->testedInstance->booleanPropertyHasValue($property, $boolean1); })
 					->isInstanceOf('estvoyage\serialization\exception\logic')
-					->hasMessage('Serializer is not started')
+					->hasMessage('Data consumer is undefined')
 		;
 	}
 
@@ -119,7 +119,7 @@ class json extends units\test
 			->then
 				->exception(function() use ($property, $storable1) { $this->testedInstance->storablePropertyHasValue($property, $storable1); })
 					->isInstanceOf('estvoyage\serialization\exception\logic')
-					->hasMessage('Serializer is not started')
+					->hasMessage('Data consumer is undefined')
 		;
 	}
 
@@ -135,7 +135,7 @@ class json extends units\test
 			->then
 				->exception(function() use ($property) { $this->testedInstance->nullProperty($property); })
 					->isInstanceOf('estvoyage\serialization\exception\logic')
-					->hasMessage('Serializer is not started')
+					->hasMessage('Data consumer is undefined')
 		;
 	}
 
