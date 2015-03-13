@@ -22,7 +22,7 @@ class json extends units\test
 		;
 	}
 
-	function testTypeIs()
+	function testObjectTypeIs()
 	{
 		$this
 			->given(
@@ -32,13 +32,13 @@ class json extends units\test
 				$this->newTestedInstance
 			)
 			->then
-				->exception(function() use ($type) { $this->testedInstance->typeIs($type); })
+				->exception(function() use ($type) { $this->testedInstance->objectTypeIs($type); })
 					->isInstanceOf('estvoyage\serialization\exception\logic')
 					->hasMessage('Data consumer is undefined')
 		;
 	}
 
-	function testStringPropertyHasValue()
+	function testStringObjectPropertyHasValue()
 	{
 		$this
 			->given(
@@ -49,13 +49,13 @@ class json extends units\test
 				$this->newTestedInstance
 			)
 			->then
-				->exception(function() use ($property, $string1) { $this->testedInstance->stringPropertyHasValue($property, $string1); })
+				->exception(function() use ($property, $string1) { $this->testedInstance->stringObjectPropertyHasValue($property, $string1); })
 					->isInstanceOf('estvoyage\serialization\exception\logic')
 					->hasMessage('Data consumer is undefined')
 		;
 	}
 
-	function testIntegerPropertyHasValue()
+	function testIntegerObjectPropertyHasValue()
 	{
 		$this
 			->given(
@@ -66,13 +66,13 @@ class json extends units\test
 				$this->newTestedInstance
 			)
 			->then
-				->exception(function() use ($property, $integer1) { $this->testedInstance->integerPropertyHasValue($property, $integer1); })
+				->exception(function() use ($property, $integer1) { $this->testedInstance->integerObjectPropertyHasValue($property, $integer1); })
 					->isInstanceOf('estvoyage\serialization\exception\logic')
 					->hasMessage('Data consumer is undefined')
 		;
 	}
 
-	function testFloatPropertyHasValue()
+	function testFloatObjectPropertyHasValue()
 	{
 		$this
 			->given(
@@ -83,13 +83,13 @@ class json extends units\test
 				$this->newTestedInstance
 			)
 			->then
-				->exception(function() use ($property, $float1) { $this->testedInstance->floatPropertyHasValue($property, $float1); })
+				->exception(function() use ($property, $float1) { $this->testedInstance->floatObjectPropertyHasValue($property, $float1); })
 					->isInstanceOf('estvoyage\serialization\exception\logic')
 					->hasMessage('Data consumer is undefined')
 		;
 	}
 
-	function testBooleanPropertyHasValue()
+	function testBooleanObjectPropertyHasValue()
 	{
 		$this
 			->given(
@@ -100,13 +100,13 @@ class json extends units\test
 				$this->newTestedInstance
 			)
 			->then
-				->exception(function() use ($property, $boolean1) { $this->testedInstance->booleanPropertyHasValue($property, $boolean1); })
+				->exception(function() use ($property, $boolean1) { $this->testedInstance->booleanObjectPropertyHasValue($property, $boolean1); })
 					->isInstanceOf('estvoyage\serialization\exception\logic')
 					->hasMessage('Data consumer is undefined')
 		;
 	}
 
-	function testStorablePropertyHasValue()
+	function testStorableObjectPropertyHasValue()
 	{
 		$this
 			->given(
@@ -117,13 +117,13 @@ class json extends units\test
 				$this->newTestedInstance
 			)
 			->then
-				->exception(function() use ($property, $storable1) { $this->testedInstance->storablePropertyHasValue($property, $storable1); })
+				->exception(function() use ($property, $storable1) { $this->testedInstance->storableObjectPropertyHasValue($property, $storable1); })
 					->isInstanceOf('estvoyage\serialization\exception\logic')
 					->hasMessage('Data consumer is undefined')
 		;
 	}
 
-	function testNullProperty()
+	function testNullObjectProperty()
 	{
 		$this
 			->given(
@@ -133,7 +133,7 @@ class json extends units\test
 				$this->newTestedInstance
 			)
 			->then
-				->exception(function() use ($property) { $this->testedInstance->nullProperty($property); })
+				->exception(function() use ($property) { $this->testedInstance->nullObjectProperty($property); })
 					->isInstanceOf('estvoyage\serialization\exception\logic')
 					->hasMessage('Data consumer is undefined')
 		;
@@ -149,7 +149,7 @@ class json extends units\test
 			)
 
 			->if(
-				$this->calling($storable1)->storerIsReady = function($serializer) {}
+				$this->calling($storable1)->objectStorerIs = function($serializer) {}
 			)
 			->then
 				->object($this->testedInstance->dataConsumerNeedStorable($dataConsumer, $storable1))->isTestedInstance
@@ -157,8 +157,8 @@ class json extends units\test
 
 			->if(
 				$type = new object\type('aType'),
-				$this->calling($storable1)->storerIsReady = function($serializer) use ($type) {
-					$serializer->typeIs($type);
+				$this->calling($storable1)->objectStorerIs = function($serializer) use ($type) {
+					$serializer->objectTypeIs($type);
 				}
 			)
 			->then
@@ -170,8 +170,8 @@ class json extends units\test
 				$string1 = new object\property\string('a string 1')
 			)
 			->if(
-				$this->calling($storable1)->storerIsReady = function($serializer) use ($string1Property, $string1) {
-					$serializer->stringPropertyHasValue($string1Property, $string1);
+				$this->calling($storable1)->objectStorerIs = function($serializer) use ($string1Property, $string1) {
+					$serializer->stringObjectPropertyHasValue($string1Property, $string1);
 				}
 			)
 			->then
@@ -183,8 +183,8 @@ class json extends units\test
 				$integer1 = new object\property\integer(666)
 			)
 			->if(
-				$this->calling($storable1)->storerIsReady = function($serializer) use ($integer1Property, $integer1) {
-					$serializer->integerPropertyHasValue($integer1Property, $integer1);
+				$this->calling($storable1)->objectStorerIs = function($serializer) use ($integer1Property, $integer1) {
+					$serializer->integerObjectPropertyHasValue($integer1Property, $integer1);
 				}
 			)
 			->then
@@ -196,8 +196,8 @@ class json extends units\test
 				$float1 = new object\property\float(666.999)
 			)
 			->if(
-				$this->calling($storable1)->storerIsReady = function($serializer) use ($float1Property, $float1) {
-					$serializer->floatPropertyHasValue($float1Property, $float1);
+				$this->calling($storable1)->objectStorerIs = function($serializer) use ($float1Property, $float1) {
+					$serializer->floatObjectPropertyHasValue($float1Property, $float1);
 				}
 			)
 			->then
@@ -209,8 +209,8 @@ class json extends units\test
 				$boolean1 = new object\property\boolean
 			)
 			->if(
-				$this->calling($storable1)->storerIsReady = function($serializer) use ($boolean1Property, $boolean1) {
-					$serializer->booleanPropertyHasValue($boolean1Property, $boolean1);
+				$this->calling($storable1)->objectStorerIs = function($serializer) use ($boolean1Property, $boolean1) {
+					$serializer->booleanObjectPropertyHasValue($boolean1Property, $boolean1);
 				}
 			)
 			->then
@@ -221,8 +221,8 @@ class json extends units\test
 				$boolean1 = new object\property\boolean(true)
 			)
 			->if(
-				$this->calling($storable1)->storerIsReady = function($serializer) use ($boolean1Property, $boolean1) {
-					$serializer->booleanPropertyHasValue($boolean1Property, $boolean1);
+				$this->calling($storable1)->objectStorerIs = function($serializer) use ($boolean1Property, $boolean1) {
+					$serializer->booleanObjectPropertyHasValue($boolean1Property, $boolean1);
 				}
 			)
 			->then
@@ -234,11 +234,11 @@ class json extends units\test
 				$storable2 = new \mock\estvoyage\object\storable
 			)
 			->if(
-				$this->calling($storable2)->storerIsReady = function($serializer) use ($integer1Property, $integer1) {
-					$serializer->integerPropertyHasValue($integer1Property, $integer1);
+				$this->calling($storable2)->objectStorerIs = function($serializer) use ($integer1Property, $integer1) {
+					$serializer->integerObjectPropertyHasValue($integer1Property, $integer1);
 				},
-				$this->calling($storable1)->storerIsReady = function($serializer) use ($storable1Property, $storable2) {
-					$serializer->storablePropertyHasValue($storable1Property, $storable2);
+				$this->calling($storable1)->objectStorerIs = function($serializer) use ($storable1Property, $storable2) {
+					$serializer->storableObjectPropertyHasValue($storable1Property, $storable2);
 				}
 			)
 			->then
@@ -249,8 +249,8 @@ class json extends units\test
 				$array1Property = new object\property('array1Property')
 			)
 			->if(
-				$this->calling($storable1)->storerIsReady = function($serializer) use ($array1Property, $storable2) {
-					$serializer->arrayPropertyHasValues($array1Property, $storable2);
+				$this->calling($storable1)->objectStorerIs = function($serializer) use ($array1Property, $storable2) {
+					$serializer->arrayObjectPropertyHasValues($array1Property, $storable2);
 				}
 			)
 			->then
@@ -261,11 +261,11 @@ class json extends units\test
 				$storable3 = new \mock\estvoyage\object\storable
 			)
 			->if(
-				$this->calling($storable3)->storerIsReady = function($serializer) use ($float1Property, $float1) {
-					$serializer->floatPropertyHasValue($float1Property, $float1);
+				$this->calling($storable3)->objectStorerIs = function($serializer) use ($float1Property, $float1) {
+					$serializer->floatObjectPropertyHasValue($float1Property, $float1);
 				},
-				$this->calling($storable1)->storerIsReady = function($serializer) use ($array1Property, $storable2, $storable3) {
-					$serializer->arrayPropertyHasValues($array1Property, $storable2, $storable3);
+				$this->calling($storable1)->objectStorerIs = function($serializer) use ($array1Property, $storable2, $storable3) {
+					$serializer->arrayObjectPropertyHasValues($array1Property, $storable2, $storable3);
 				}
 			)
 			->then
@@ -276,8 +276,8 @@ class json extends units\test
 				$null1Property = new object\property('null1Property')
 			)
 			->if(
-				$this->calling($storable1)->storerIsReady = function($serializer) use ($null1Property) {
-					$serializer->nullProperty($null1Property);
+				$this->calling($storable1)->objectStorerIs = function($serializer) use ($null1Property) {
+					$serializer->nullObjectProperty($null1Property);
 				}
 			)
 			->then
@@ -285,7 +285,7 @@ class json extends units\test
 				->mock($dataConsumer)->receive('newData')->withArguments(new data\data('{"null1Property":null}'))->once
 
 			->if(
-				$this->calling($storable1)->storerIsReady = function($serializer) use (
+				$this->calling($storable1)->objectStorerIs = function($serializer) use (
 						$string1Property, $string1,
 						$integer1Property, $integer1,
 						$float1Property, $float1,
@@ -295,13 +295,13 @@ class json extends units\test
 						$null1Property
 					) {
 					$serializer
-						->stringPropertyHasValue($string1Property, $string1)
-						->integerPropertyHasValue($integer1Property, $integer1)
-						->floatPropertyHasValue($float1Property, $float1)
-						->booleanPropertyHasValue($boolean1Property, $boolean1)
-						->storablePropertyHasValue($storable1Property, $storable2)
-						->arrayPropertyHasValues($array1Property, $storable2)
-						->nullProperty($null1Property)
+						->stringObjectPropertyHasValue($string1Property, $string1)
+						->integerObjectPropertyHasValue($integer1Property, $integer1)
+						->floatObjectPropertyHasValue($float1Property, $float1)
+						->booleanObjectPropertyHasValue($boolean1Property, $boolean1)
+						->storableObjectPropertyHasValue($storable1Property, $storable2)
+						->arrayObjectPropertyHasValues($array1Property, $storable2)
+						->nullObjectProperty($null1Property)
 					;
 				}
 			)

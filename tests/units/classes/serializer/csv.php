@@ -29,14 +29,14 @@ class csv extends units\test
 		$this
 			->given(
 				$dataConsumer = new consumer,
-				
+
 				$this->calling($csvGenerator = new csvGenerator)->dataConsumerNeedCsvRecord = $csvGenerator,
 
 				$this->newTestedInstance($csvGenerator)
 			)
 
 			->if(
-				$this->calling($storable1 = new storable)->storerIsReady = function($serializer) {}
+				$this->calling($storable1 = new storable)->objectStorerIs = function($serializer) {}
 			)
 			->then
 				->object($this->testedInstance->dataConsumerNeedStorable($dataConsumer, $storable1))->isTestedInstance
@@ -44,8 +44,8 @@ class csv extends units\test
 
 			->if(
 				$type = new object\type('aType'),
-				$this->calling($storable1)->storerIsReady = function($serializer) use ($type) {
-					$serializer->typeIs($type);
+				$this->calling($storable1)->objectStorerIs = function($serializer) use ($type) {
+					$serializer->objectTypeIs($type);
 				}
 			)
 			->then
@@ -58,8 +58,8 @@ class csv extends units\test
 			)
 
 			->if(
-				$this->calling($storable1)->storerIsReady = function($serializer) use ($string1Property, $string1) {
-					$serializer->stringPropertyHasValue($string1Property, $string1);
+				$this->calling($storable1)->objectStorerIs = function($serializer) use ($string1Property, $string1) {
+					$serializer->stringObjectPropertyHasValue($string1Property, $string1);
 				}
 			)
 			->then
@@ -72,9 +72,9 @@ class csv extends units\test
 							->once
 
 			->if(
-				$this->calling($storable1)->storerIsReady = function($serializer) use ($string1Property, $string1) {
-					$serializer->stringPropertyHasValue($string1Property, $string1);
-					$serializer->stringPropertyHasValue($string1Property, $string1);
+				$this->calling($storable1)->objectStorerIs = function($serializer) use ($string1Property, $string1) {
+					$serializer->stringObjectPropertyHasValue($string1Property, $string1);
+					$serializer->stringObjectPropertyHasValue($string1Property, $string1);
 				}
 			)
 			->then
@@ -91,9 +91,9 @@ class csv extends units\test
 				$string2 = new object\property\string('a string 2')
 			)
 			->if(
-				$this->calling($storable1)->storerIsReady = function($serializer) use ($string1Property, $string1, $string2Property, $string2) {
-					$serializer->stringPropertyHasValue($string1Property, $string1);
-					$serializer->stringPropertyHasValue($string2Property, $string2);
+				$this->calling($storable1)->objectStorerIs = function($serializer) use ($string1Property, $string1, $string2Property, $string2) {
+					$serializer->stringObjectPropertyHasValue($string1Property, $string1);
+					$serializer->stringObjectPropertyHasValue($string2Property, $string2);
 				}
 			)
 			->then
@@ -111,11 +111,11 @@ class csv extends units\test
 			)
 
 			->if(
-				$this->calling($storable2)->storerIsReady = function($serializer) use ($string1Property, $string1) {
-					$serializer->stringPropertyHasValue($string1Property, $string1);
+				$this->calling($storable2)->objectStorerIs = function($serializer) use ($string1Property, $string1) {
+					$serializer->stringObjectPropertyHasValue($string1Property, $string1);
 				},
-				$this->calling($storable1)->storerIsReady = function($serializer) use ($storable1Property, $storable2) {
-					$serializer->storablePropertyHasValue($storable1Property, $storable2);
+				$this->calling($storable1)->objectStorerIs = function($serializer) use ($storable1Property, $storable2) {
+					$serializer->storableObjectPropertyHasValue($storable1Property, $storable2);
 				}
 			)
 			->then
@@ -128,13 +128,13 @@ class csv extends units\test
 							->twice
 
 			->if(
-				$this->calling($storable2)->storerIsReady = function($serializer) use ($string1Property, $string1) {
-					$serializer->stringPropertyHasValue($string1Property, $string1);
+				$this->calling($storable2)->objectStorerIs = function($serializer) use ($string1Property, $string1) {
+					$serializer->stringObjectPropertyHasValue($string1Property, $string1);
 				},
-				$this->calling($storable1)->storerIsReady = function($serializer) use ($string1Property, $string1, $storable1Property, $storable2) {
+				$this->calling($storable1)->objectStorerIs = function($serializer) use ($string1Property, $string1, $storable1Property, $storable2) {
 					$serializer
-						->stringPropertyHasValue($string1Property, $string1)
-						->storablePropertyHasValue($storable1Property, $storable2)
+						->stringObjectPropertyHasValue($string1Property, $string1)
+						->storableObjectPropertyHasValue($storable1Property, $storable2)
 					;
 				}
 			)
@@ -148,15 +148,15 @@ class csv extends units\test
 							->twice
 
 			->if(
-				$this->calling($storable1)->storerIsReady = function($serializer) use (
+				$this->calling($storable1)->objectStorerIs = function($serializer) use (
 						$string1Property, $string1,
 						$storable1Property, $storable2,
 						$string2Property, $string2
 					) {
 					$serializer
-						->stringPropertyHasValue($string1Property, $string1)
-						->storablePropertyHasValue($storable1Property, $storable2)
-						->stringPropertyHasValue($string2Property, $string2)
+						->stringObjectPropertyHasValue($string1Property, $string1)
+						->storableObjectPropertyHasValue($storable1Property, $storable2)
+						->stringObjectPropertyHasValue($string2Property, $string2)
 					;
 				}
 			)
@@ -175,11 +175,11 @@ class csv extends units\test
 			)
 
 			->if(
-				$this->calling($storable2)->storerIsReady = function($serializer) use ($string1Property, $string1) {
-					$serializer->stringPropertyHasValue($string1Property, $string1);
+				$this->calling($storable2)->objectStorerIs = function($serializer) use ($string1Property, $string1) {
+					$serializer->stringObjectPropertyHasValue($string1Property, $string1);
 				},
-				$this->calling($storable1)->storerIsReady = function($serializer) use ($arrayProperty, $storable2) {
-					$serializer->arrayPropertyHasValues($arrayProperty, $storable2);
+				$this->calling($storable1)->objectStorerIs = function($serializer) use ($arrayProperty, $storable2) {
+					$serializer->arrayObjectPropertyHasValues($arrayProperty, $storable2);
 				}
 			)
 			->then
@@ -192,10 +192,10 @@ class csv extends units\test
 				$integer1 = new object\property\integer(666)
 			)
 			->if(
-				$this->calling($storable1)->storerIsReady = function($serializer) use (
+				$this->calling($storable1)->objectStorerIs = function($serializer) use (
 						$integer1Property, $integer1
 					) {
-					$serializer->integerPropertyHasValue($integer1Property, $integer1);
+					$serializer->integerObjectPropertyHasValue($integer1Property, $integer1);
 				}
 			)
 			->then
@@ -212,10 +212,10 @@ class csv extends units\test
 				$float1 = new object\property\float(666.999)
 			)
 			->if(
-				$this->calling($storable1)->storerIsReady = function($serializer) use (
+				$this->calling($storable1)->objectStorerIs = function($serializer) use (
 						$float1Property, $float1
 					) {
-					$serializer->floatPropertyHasValue($float1Property, $float1);
+					$serializer->floatObjectPropertyHasValue($float1Property, $float1);
 				}
 			)
 			->then
@@ -232,10 +232,10 @@ class csv extends units\test
 				$boolean1 = new object\property\boolean(false)
 			)
 			->if(
-				$this->calling($storable1)->storerIsReady = function($serializer) use (
+				$this->calling($storable1)->objectStorerIs = function($serializer) use (
 						$boolean1Property, $boolean1
 					) {
-					$serializer->booleanPropertyHasValue($boolean1Property, $boolean1);
+					$serializer->booleanObjectPropertyHasValue($boolean1Property, $boolean1);
 				}
 			)
 			->then
@@ -252,10 +252,10 @@ class csv extends units\test
 				$boolean2 = new object\property\boolean(true)
 			)
 			->if(
-				$this->calling($storable2)->storerIsReady = function($serializer) use (
+				$this->calling($storable2)->objectStorerIs = function($serializer) use (
 						$boolean2Property, $boolean2
 					) {
-					$serializer->booleanPropertyHasValue($boolean2Property, $boolean2);
+					$serializer->booleanObjectPropertyHasValue($boolean2Property, $boolean2);
 				}
 			)
 			->then
@@ -271,10 +271,10 @@ class csv extends units\test
 				$nullProperty = new object\property('nullProperty')
 			)
 			->if(
-				$this->calling($storable2)->storerIsReady = function($serializer) use (
+				$this->calling($storable2)->objectStorerIs = function($serializer) use (
 						$nullProperty
 					) {
-					$serializer->nullProperty($nullProperty);
+					$serializer->nullObjectProperty($nullProperty);
 				}
 			)
 			->then

@@ -26,7 +26,7 @@ abstract class generic implements serialization\serializer
 		return $this;
 	}
 
-	final function typeIs(object\type $type)
+	final function objectTypeIs(object\type $type)
 	{
 		$this
 			->ifDataConsumer()
@@ -36,7 +36,7 @@ abstract class generic implements serialization\serializer
 		return $this;
 	}
 
-	final function stringPropertyHasValue(object\property $property, object\property\string $string)
+	final function stringObjectPropertyHasValue(object\property $property, object\property\string $string)
 	{
 		$this
 			->ifDataConsumer()
@@ -46,7 +46,7 @@ abstract class generic implements serialization\serializer
 		return $this;
 	}
 
-	final function integerPropertyHasValue(object\property $property, object\property\integer $integer)
+	final function integerObjectPropertyHasValue(object\property $property, object\property\integer $integer)
 	{
 		$this
 			->ifDataConsumer()
@@ -56,7 +56,7 @@ abstract class generic implements serialization\serializer
 		return $this;
 	}
 
-	final function floatPropertyHasValue(object\property $property, object\property\float $float)
+	final function floatObjectPropertyHasValue(object\property $property, object\property\float $float)
 	{
 		$this
 			->ifDataConsumer()
@@ -66,7 +66,7 @@ abstract class generic implements serialization\serializer
 		return $this;
 	}
 
-	final function booleanPropertyHasValue(object\property $property, object\property\boolean $boolean)
+	final function booleanObjectPropertyHasValue(object\property $property, object\property\boolean $boolean)
 	{
 		$this
 			->ifDataConsumer()
@@ -76,7 +76,7 @@ abstract class generic implements serialization\serializer
 		return $this;
 	}
 
-	final function storablePropertyHasValue(object\property $property, object\storable $storable)
+	final function storableObjectPropertyHasValue(object\property $property, object\storable $storable)
 	{
 		$this
 			->ifDataConsumer()
@@ -86,7 +86,7 @@ abstract class generic implements serialization\serializer
 		return $this;
 	}
 
-	final function arrayPropertyHasValues(object\property $property, object\storable $storable, object\storable... $storables)
+	final function arrayObjectPropertyHasValues(object\property $property, object\storable $storable, object\storable... $storables)
 	{
 		$this
 			->ifDataConsumer()
@@ -96,7 +96,7 @@ abstract class generic implements serialization\serializer
 		return $this;
 	}
 
-	final function nullProperty(object\property $property)
+	final function nullObjectProperty(object\property $property)
 	{
 		$this
 			->ifDataConsumer()
@@ -147,7 +147,7 @@ abstract class generic implements serialization\serializer
 
 	private function storableIs(object\storable $storable)
 	{
-		$storable->storerIsReady($this);
+		$storable->objectStorerIs($this);
 
 		return $this;
 	}
