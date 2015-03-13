@@ -15,6 +15,11 @@ abstract class generic implements serialization\serializer
 		$dataConsumer
 	;
 
+	function __construct()
+	{
+		$this->dataConsumer = new data\consumer\blackhole;
+	}
+
 	final function dataConsumerNeedStorable(data\consumer $dataConsumer, object\storable $storable)
 	{
 		$this

@@ -60,12 +60,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/estvoyage/data.git",
-                "reference": "5b6eec060addab770bc433314ddec3e3ce6653f5"
+                "reference": "3c4fe39bb074627ed72ab37f900c42ac395c35d7"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/estvoyage/data/zipball/5b6eec060addab770bc433314ddec3e3ce6653f5",
-                "reference": "5b6eec060addab770bc433314ddec3e3ce6653f5",
+                "url": "https://api.github.com/repos/estvoyage/data/zipball/3c4fe39bb074627ed72ab37f900c42ac395c35d7",
+                "reference": "3c4fe39bb074627ed72ab37f900c42ac395c35d7",
                 "shasum": ""
             },
             "require": {
@@ -98,7 +98,7 @@
                 "East",
                 "data"
             ],
-            "time": "2015-03-12 12:39:00"
+            "time": "2015-03-13 20:20:05"
         },
         {
             "name": "estvoyage/object",
@@ -201,7 +201,7 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/mageekguy/atoum.git",
-                "reference": "da4a6926c7e721834bea45e6be081bbe4b9c8d76"
+                "reference": "b377408df8792cada8b8c3f2f18ad4a5973430a9"
             },
             "require": {
                 "ext-hash": "*",
@@ -262,7 +262,7 @@
                 "test",
                 "unit testing"
             ],
-            "time": "2015-02-26 12:08:02"
+            "time": "2015-03-13 20:10:02"
         }
     ],
     "aliases": [],
