@@ -25,6 +25,23 @@ class csv extends units\test
 		;
 	}
 
+	function testDataConsumerIs()
+	{
+		$this
+			->given(
+				$dataConsumer = new mockOfData\consumer,
+				$this->calling($csvGenerator = new mockOfCsv\generator)->dataConsumerIs = $csvGenerator
+			)
+			->if(
+				$this->newTestedInstance(new mockOfData\consumer, $csvGenerator)
+			)
+			->then
+				->object($this->testedInstance->dataConsumerIs($dataConsumer))
+					->isNotTestedInstance
+					->isEqualTo($this->newTestedInstance($dataConsumer, $csvGenerator))
+		;
+	}
+
 	function testNewStorable()
 	{
 		$this
