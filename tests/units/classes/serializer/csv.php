@@ -25,7 +25,7 @@ class csv extends units\test
 		;
 	}
 
-	function testNewCsvRecord()
+	function testNewStorable()
 	{
 		$this
 			->given(
