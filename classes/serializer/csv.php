@@ -3,89 +3,101 @@
 namespace estvoyage\serialization\serializer;
 
 use
-	estvoyage\serialization,
 	estvoyage\data,
-	estvoyage\object
+	estvoyage\object,
+	estvoyage\serialization
 ;
 
-final class csv extends generic
+final class csv implements serialization\serializer, data\provider
 {
 	private
+		$dataConsumer,
+		$csvGenerator,
 		$header = [],
 		$line = [],
-		$namespace = [],
-		$csvGenerator
+		$namespace = []
 	;
 
-	function __construct(\estvoyage\csv\generator $csvGenerator = null)
+	function __construct(data\consumer $dataConsumer, \estvoyage\csv\generator $csvGenerator)
 	{
+		$this->dataConsumer = $dataConsumer;
 		$this->csvGenerator = $csvGenerator;
 	}
 
-	protected function serializerReadyToSerialize()
+	function dataConsumerIs(data\consumer $dataConsumer)
 	{
-		return $this->namespace ? $this : new self($this->csvGenerator);
+		return new self($dataConsumer, $this->csvGenerator);
 	}
 
-	protected function serializeType(object\type $type)
+	function newStorable(object\storable $storable)
 	{
+		$storable->objectStorerIs($this);
+
+		if (! $this->namespace)
+		{
+			$this->csvGenerator
+				->dataConsumerNeedCsvRecord($this->dataConsumer, new \estvoyage\csv\record\line(...$this->header))
+				->dataConsumerNeedCsvRecord($this->dataConsumer, new \estvoyage\csv\record\line(...$this->line))
+			;
+
+			$this->header = [];
+			$this->line = [];
+		}
+
+		return $this;
 	}
 
-	protected function serializeStringPropertyWithValue(object\property $property, object\property\string $string)
+	function objectTypeIs(object\type $type)
 	{
-		$this->addPropertyWithValue($property, $string);
+		return $this;
 	}
 
-	protected function serializeIntegerPropertyWithValue(object\property $property, object\property\integer $integer)
+	function stringObjectPropertyHasValue(object\property $property, object\property\string $string)
 	{
-		$this->addPropertyWithValue($property, $integer);
+		return $this->addPropertyWithValue($property, $string);
 	}
 
-	protected function serializeFloatPropertyWithValue(object\property $property, object\property\float $float)
+	function integerObjectPropertyHasValue(object\property $property, object\property\integer $integer)
 	{
-		$this->addPropertyWithValue($property, $float);
+		return $this->addPropertyWithValue($property, $integer);
 	}
 
-	protected function serializeBooleanPropertyWithValue(object\property $property, object\property\boolean $boolean)
+	function floatObjectPropertyHasValue(object\property $property, object\property\float $float)
 	{
-		$this->addPropertyWithValue($property, $boolean->value ? 1 : 0);
+		return $this->addPropertyWithValue($property, $float);
 	}
 
-	protected function serializeStorablePropertyWithValue(object\property $property, object\storable $storable)
+	function booleanObjectPropertyHasValue(object\property $property, object\property\boolean $boolean)
+	{
+		return $this->addPropertyWithValue($property, $boolean->value ? 1 : 0);
+	}
+
+	function storableObjectPropertyHasValue(object\property $property, object\storable $storable)
 	{
 		$this->namespace[] = $property;
 
 		$this->newStorable($storable);
 
 		array_pop($this->namespace);
+
+		return $this;
 	}
 
-	protected function serializeNullProperty(object\property $property)
-	{
-		$this->addPropertyWithValue($property, '');
-	}
-
-	protected function serializeArrayPropertyWithValues(object\property $property, object\storable $storable, object\storable... $storables)
+	function arrayObjectPropertyHasValues(object\property $property, object\storable $storable, object\storable... $storables)
 	{
 		throw new csv\exception('Unable to serialize this kind of data');
 	}
 
-	protected function dataConsumerIs(data\consumer $dataConsumer)
+	function nullObjectProperty(object\property $property)
 	{
-		if (! $this->namespace && $this->header)
-		{
-			$this->csvGenerator
-				->dataConsumerNeedCsvRecord($dataConsumer, new \estvoyage\csv\record\line(...$this->header))
-				->dataConsumerNeedCsvRecord($dataConsumer, new \estvoyage\csv\record\line(...$this->line))
-			;
-		}
-
-		return $this;
+		return $this->addPropertyWithValue($property, '');
 	}
 
 	private function addPropertyWithValue(object\property $property, $value)
 	{
 		$this->header[] = new data\data((! $this->namespace ? '' : join('.', $this->namespace) . '.') . $property);
 		$this->line[] = new data\data((string) $value);
+
+		return $this;
 	}
 }

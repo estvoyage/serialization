@@ -8,8 +8,8 @@ use
 	estvoyage\serialization\tests\units,
 	estvoyage\object,
 	estvoyage\data,
-	mock\estvoyage\data\consumer,
-	mock\estvoyage\object\storable
+	mock\estvoyage\data as mockOfData,
+	mock\estvoyage\object as mockOfObject
 ;
 
 class json extends units\test
@@ -18,7 +18,34 @@ class json extends units\test
 	{
 		$this->testedClass
 			->isFinal
-			->extends('estvoyage\serialization\serializer')
+			->implements('estvoyage\serialization\serializer')
+			->implements('estvoyage\data\provider')
+		;
+	}
+
+	function testConstructor()
+	{
+		$this
+			->object($this->newTestedInstance)
+				->isEqualTo(
+					$this->newTestedInstance->dataConsumerIs(new data\consumer\blackhole)
+				)
+		;
+	}
+
+	function testDataConsumerIs()
+	{
+		$this
+			->given(
+				$dataConsumer = new mockOfData\consumer
+			)
+			->if(
+				$this->newTestedInstance
+			)
+			->then
+				->object($this->testedInstance->dataConsumerIs($dataConsumer))
+					->isNotTestedInstance
+					->isInstanceOf($this->testedInstance)
 		;
 	}
 
@@ -101,7 +128,7 @@ class json extends units\test
 		$this
 			->given(
 				$property = new object\property('foo'),
-				$storable1 = new \mock\estvoyage\object\storable
+				$storable1 = new mockOfObject\storable
 			)
 			->if(
 				$this->newTestedInstance
@@ -125,33 +152,36 @@ class json extends units\test
 		;
 	}
 
-	function testDataConsumerNeedStorable()
+	function testNewStorable()
 	{
 		$this
 			->given(
-				$dataConsumer = new consumer,
-				$this->newTestedInstance,
-				$storable1 = new storable
+				$this->calling($dataConsumer = new mockOfData\consumer)->newData = function($data) use (& $json) { $json .= $data; },
+				$storable1 = new mockOfObject\storable,
+				$this->newTestedInstance($dataConsumer)
 			)
 
 			->if(
+				$json = '',
 				$this->calling($storable1)->objectStorerIs = function($serializer) {}
 			)
 			->then
-				->object($this->testedInstance->dataConsumerNeedStorable($dataConsumer, $storable1))->isTestedInstance
-				->mock($dataConsumer)->receive('newData')->withArguments(new data\data('{}'))->once
+				->object($this->testedInstance->newStorable($storable1))->isTestedInstance
+				->string($json)->isEqualTo('{}')
 
 			->if(
+				$json = '',
 				$type = new object\type('aType'),
 				$this->calling($storable1)->objectStorerIs = function($serializer) use ($type) {
 					$serializer->objectTypeIs($type);
 				}
 			)
 			->then
-				->object($this->testedInstance->dataConsumerNeedStorable($dataConsumer, $storable1))->isTestedInstance
-				->mock($dataConsumer)->receive('newData')->withArguments(new data\data('{}'))->twice
+				->object($this->testedInstance->newStorable($storable1))->isTestedInstance
+				->string($json)->isEqualTo('{}')
 
 			->given(
+				$json = '',
 				$string1Property = new object\property('string1Property'),
 				$string1 = new object\property\string('a string 1')
 			)
@@ -161,10 +191,11 @@ class json extends units\test
 				}
 			)
 			->then
-				->object($this->testedInstance->dataConsumerNeedStorable($dataConsumer, $storable1))->isTestedInstance
-				->mock($dataConsumer)->receive('newData')->withArguments(new data\data('{"string1Property":"a string 1"}'))->once
+				->object($this->testedInstance->newStorable($storable1))->isTestedInstance
+				->string($json)->isEqualTo('{"string1Property":"a string 1"}')
 
 			->given(
+				$json = '',
 				$integer1Property = new object\property('integer1Property'),
 				$integer1 = new object\property\integer(666)
 			)
@@ -174,10 +205,11 @@ class json extends units\test
 				}
 			)
 			->then
-				->object($this->testedInstance->dataConsumerNeedStorable($dataConsumer, $storable1))->isTestedInstance
-				->mock($dataConsumer)->receive('newData')->withArguments(new data\data('{"integer1Property":666}'))->once
+				->object($this->testedInstance->newStorable($storable1))->isTestedInstance
+				->string($json)->isEqualTo('{"integer1Property":666}')
 
 			->given(
+				$json = '',
 				$float1Property = new object\property('float1Property'),
 				$float1 = new object\property\float(666.999)
 			)
@@ -187,10 +219,11 @@ class json extends units\test
 				}
 			)
 			->then
-				->object($this->testedInstance->dataConsumerNeedStorable($dataConsumer, $storable1))->isTestedInstance
-				->mock($dataConsumer)->receive('newData')->withArguments(new data\data('{"float1Property":666.999}'))->once
+				->object($this->testedInstance->newStorable($storable1))->isTestedInstance
+				->string($json)->isEqualTo('{"float1Property":666.999}')
 
 			->given(
+				$json = '',
 				$boolean1Property = new object\property('boolean1Property'),
 				$boolean1 = new object\property\boolean
 			)
@@ -200,10 +233,11 @@ class json extends units\test
 				}
 			)
 			->then
-				->object($this->testedInstance->dataConsumerNeedStorable($dataConsumer, $storable1))->isTestedInstance
-				->mock($dataConsumer)->receive('newData')->withArguments(new data\data('{"boolean1Property":false}'))->once
+				->object($this->testedInstance->newStorable($storable1))->isTestedInstance
+				->string($json)->isEqualTo('{"boolean1Property":false}')
 
 			->given(
+				$json = '',
 				$boolean1 = new object\property\boolean(true)
 			)
 			->if(
@@ -212,10 +246,11 @@ class json extends units\test
 				}
 			)
 			->then
-				->object($this->testedInstance->dataConsumerNeedStorable($dataConsumer, $storable1))->isTestedInstance
-				->mock($dataConsumer)->receive('newData')->withArguments(new data\data('{"boolean1Property":true}'))->once
+				->object($this->testedInstance->newStorable($storable1))->isTestedInstance
+				->string($json)->isEqualTo('{"boolean1Property":true}')
 
 			->given(
+				$json = '',
 				$storable1Property = new object\property('storable1Property'),
 				$storable2 = new \mock\estvoyage\object\storable
 			)
@@ -228,10 +263,11 @@ class json extends units\test
 				}
 			)
 			->then
-				->object($this->testedInstance->dataConsumerNeedStorable($dataConsumer, $storable1))->isTestedInstance
-				->mock($dataConsumer)->receive('newData')->withArguments(new data\data('{"storable1Property":{"integer1Property":666}}'))->once
+				->object($this->testedInstance->newStorable($storable1))->isTestedInstance
+				->string($json)->isEqualTo('{"storable1Property":{"integer1Property":666}}')
 
 			->given(
+				$json = '',
 				$array1Property = new object\property('array1Property')
 			)
 			->if(
@@ -240,10 +276,11 @@ class json extends units\test
 				}
 			)
 			->then
-				->object($this->testedInstance->dataConsumerNeedStorable($dataConsumer, $storable1))->isTestedInstance
-				->mock($dataConsumer)->receive('newData')->withArguments(new data\data('{"array1Property":[{"integer1Property":666}]}'))->once
+				->object($this->testedInstance->newStorable($storable1))->isTestedInstance
+				->string($json)->isEqualTo('{"array1Property":[{"integer1Property":666}]}')
 
 			->given(
+				$json = '',
 				$storable3 = new \mock\estvoyage\object\storable
 			)
 			->if(
@@ -255,10 +292,11 @@ class json extends units\test
 				}
 			)
 			->then
-				->object($this->testedInstance->dataConsumerNeedStorable($dataConsumer, $storable1))->isTestedInstance
-				->mock($dataConsumer)->receive('newData')->withArguments(new data\data('{"array1Property":[{"integer1Property":666},{"float1Property":666.999}]}'))->once
+				->object($this->testedInstance->newStorable($storable1))->isTestedInstance
+				->string($json)->isEqualTo('{"array1Property":[{"integer1Property":666},{"float1Property":666.999}]}')
 
 			->given(
+				$json = '',
 				$null1Property = new object\property('null1Property')
 			)
 			->if(
@@ -267,10 +305,11 @@ class json extends units\test
 				}
 			)
 			->then
-				->object($this->testedInstance->dataConsumerNeedStorable($dataConsumer, $storable1))->isTestedinstance
-				->mock($dataConsumer)->receive('newData')->withArguments(new data\data('{"null1Property":null}'))->once
+				->object($this->testedInstance->newStorable($storable1))->isTestedinstance
+				->string($json)->isEqualTo('{"null1Property":null}')
 
 			->if(
+				$json = '',
 				$this->calling($storable1)->objectStorerIs = function($serializer) use (
 						$string1Property, $string1,
 						$integer1Property, $integer1,
@@ -292,14 +331,36 @@ class json extends units\test
 				}
 			)
 			->then
-				->object($this->testedInstance->dataConsumerNeedStorable($dataConsumer, $storable1))->isTestedInstance
-				->mock($dataConsumer)
-					->receive('newData')
-						->withArguments(new data\data(
-								'{"string1Property":"a string 1","integer1Property":666,"float1Property":666.999,"boolean1Property":true,"storable1Property":{"integer1Property":666},"array1Property":[{"integer1Property":666}],"null1Property":null}'
-							)
-						)
-							->once
+				->object($this->testedInstance->newStorable($storable1))->isTestedInstance
+				->string($json)->isEqualTo('{"string1Property":"a string 1","integer1Property":666,"float1Property":666.999,"boolean1Property":true,"storable1Property":{"integer1Property":666},"array1Property":[{"integer1Property":666}],"null1Property":null}')
+
+			->if(
+				$json = '',
+				$this->calling($storable2)->objectStorerIs = function($serializer) use ($integer1Property, $integer1) {
+				},
+				$this->calling($storable1)->objectStorerIs = function($serializer) use (
+						$string1Property, $string1,
+						$integer1Property, $integer1,
+						$float1Property, $float1,
+						$boolean1Property, $boolean1,
+						$storable1Property, $storable2,
+						$array1Property,
+						$null1Property
+					) {
+					$serializer
+						->stringObjectPropertyHasValue($string1Property, $string1)
+						->integerObjectPropertyHasValue($integer1Property, $integer1)
+						->floatObjectPropertyHasValue($float1Property, $float1)
+						->booleanObjectPropertyHasValue($boolean1Property, $boolean1)
+						->storableObjectPropertyHasValue($storable1Property, $storable2)
+						->arrayObjectPropertyHasValues($array1Property, $storable2)
+						->nullObjectProperty($null1Property)
+					;
+				}
+			)
+			->then
+				->object($this->testedInstance->newStorable($storable1))->isTestedInstance
+				->string($json)->isEqualTo('{"string1Property":"a string 1","integer1Property":666,"float1Property":666.999,"boolean1Property":true,"storable1Property":{},"array1Property":[{}],"null1Property":null}')
 		;
 	}
 }

@@ -4,90 +4,161 @@ namespace estvoyage\serialization\serializer;
 
 use
 	estvoyage\data,
-	estvoyage\object
+	estvoyage\object,
+	estvoyage\serialization
 ;
 
-final class json extends generic
+final class json  implements serialization\serializer, data\provider
 {
 	private
-		$delimiter = '',
-		$buffer = '',
-		$depth = 0
+		$dataConsumer,
+		$currentDelimiter
 	;
 
-	protected function serializerReadyToSerialize()
-	{
-		$serializer = new self;
-		$serializer->depth = $this->depth + 1;
+	private static
+		$delimiter,
+		$objectStart,
+		$objectEnd,
+		$arrayStart,
+		$arrayEnd
+	;
 
-		return $serializer;
+	function __construct(data\consumer $dataConsumer = null)
+	{
+		$this->dataConsumer = $dataConsumer ?: new data\consumer\blackhole;
 	}
 
-	protected function serializeType(object\type $type)
+	function dataConsumerIs(data\consumer $dataConsumer)
 	{
+		return new self($dataConsumer);
 	}
 
-	protected function serializeStringPropertyWithValue(object\property $property, object\property\string $string)
+	function newStorable(object\storable $storable)
 	{
-		$this->serializeProperty($property, json_encode((string) $string));
+		(new self($this->dataConsumer))
+			->newData(self::$objectStart ?: (self::$objectStart = new data\data('{')))
+			->storableIs($storable)
+			->newData(self::$objectEnd ?: (self::$objectEnd = new data\data('}')))
+		;
+
+		return $this;
 	}
 
-	protected function serializeIntegerPropertyWithValue(object\property $property, object\property\integer $integer)
+	function objectTypeIs(object\type $type)
 	{
-		$this->serializeProperty($property, json_encode($integer->asInteger));
+		return $this;
 	}
 
-	protected function serializeFloatPropertyWithValue(object\property $property, object\property\float $float)
+	function stringObjectPropertyHasValue(object\property $property, object\property\string $string)
 	{
-		$this->serializeProperty($property, json_encode($float->asFloat));
+		return $this
+			->newProperty($property)
+			->newData(new data\data(json_encode((string) $string)))
+		;
 	}
 
-	protected function serializeBooleanPropertyWithValue(object\property $property, object\property\boolean $boolean)
+	function integerObjectPropertyHasValue(object\property $property, object\property\integer $integer)
 	{
-		$this->serializeProperty($property, json_encode($boolean->value));
+		return $this
+			->newProperty($property)
+			->newData(new data\data(json_encode($integer->asInteger)))
+		;
 	}
 
-	protected function serializeStorablePropertyWithValue(object\property $property, object\storable $storable)
+	function floatObjectPropertyHasValue(object\property $property, object\property\float $float)
 	{
-		$this->serializeProperty($property, $this->newStorable($storable)->buffer);
+		return $this
+			->newProperty($property)
+			->newData(new data\data((string) $float))
+		;
 	}
 
-	protected function serializeArrayPropertyWithValues(object\property $property, object\storable $firstStorable, object\storable... $storables)
+	function booleanObjectPropertyHasValue(object\property $property, object\property\boolean $boolean)
 	{
-		array_unshift($storables, $firstStorable);
+		return $this
+			->newProperty($property)
+			->newData(new data\data(json_encode($boolean->value)))
+		;
+	}
 
-		$json = [];
+	function storableObjectPropertyHasValue(object\property $property, object\storable $storable)
+	{
+		return $this
+			->newProperty($property)
+			->newStorable($storable)
+		;
+	}
+
+	function arrayObjectPropertyHasValues(object\property $property, object\storable $storable, object\storable... $storables)
+	{
+		$this
+			->newProperty($property)
+			->newData(self::arrayStart())
+			->newStorable($storable)
+		;
 
 		foreach ($storables as $storable)
 		{
-			$json[] = $this->newStorable($storable)->buffer;
+			$this
+				->newData(self::delimiter())
+				->newStorable($storable)
+			;
 		}
 
-		$this->serializeProperty($property, '[' . join(',', $json) . ']');
+		return $this->newData(self::arrayEnd());
 	}
 
-	protected function serializeNullProperty(object\property $property)
+	function nullObjectProperty(object\property $property)
 	{
-		$this->serializeProperty($property, json_encode(null));
+		return $this
+			->newProperty($property)
+			->newData(new data\data(json_encode(null)))
+		;
 	}
 
-	protected function dataConsumerIs(data\consumer $dataConsumer)
+	private function newProperty(object\property $property)
 	{
-		$this->buffer = '{' . $this->buffer . '}';
+		return $this->newData(new data\data($this->currentDelimiter() . json_encode((string) $property) . ':'));
+	}
 
-		if ($this->depth == 1)
+	private function newData(data\data $data)
+	{
+		$this->dataConsumer->newData($data);
+
+		return $this;
+	}
+
+	private function storableIs(object\storable $storable)
+	{
+		$storable->objectStorerIs($this);
+
+		return $this;
+	}
+
+	private function currentDelimiter()
+	{
+		$delimiter = $this->currentDelimiter;
+
+		if (! $this->currentDelimiter)
 		{
-			$dataConsumer->newData(new data\data($this->buffer));
+			$this->currentDelimiter = self::delimiter();
 		}
+
+		return $delimiter;
 	}
 
-	private function serializeProperty($property, $json)
+	private static function delimiter()
 	{
-		$this->buffer .= $this->delimiter . json_encode((string) $property) . ':' . $json;
+		return self::$delimiter ?: (self::$delimiter = new data\data(','));
+	}
 
-		if (! $this->delimiter)
-		{
-			$this->delimiter = ',';
-		}
+	private static function arrayStart()
+	{
+		return self::$arrayStart ?: (self::$arrayStart = new data\data('['));
+	}
+
+	private static function arrayEnd()
+	{
+		return self::$arrayEnd ?: (self::$arrayEnd = new data\data(']'));
 	}
 }
