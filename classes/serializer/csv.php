@@ -11,15 +11,28 @@ use
 final class csv implements serialization\serializer, data\provider
 {
 	private
+		$dataConsumer,
 		$csvGenerator,
 		$header = [],
 		$line = [],
 		$namespace = []
 	;
 
-	function __construct(data\consumer $dataConsumer, \estvoyage\csv\generator $csvGenerator)
+	function __construct(data\consumer $dataConsumer, \estvoyage\csv\generator $csvGenerator = null)
 	{
-		$this->csvGenerator = $csvGenerator->dataConsumerIs($dataConsumer);
+		$this->dataConsumer = $dataConsumer;
+		$this->csvGenerator =
+			$csvGenerator
+			?
+			$csvGenerator->dataConsumerIs($this->dataConsumer)
+			:
+			new \estvoyage\csv\generator\rfc4180($this->dataConsumer)
+		;
+	}
+
+	function csvGeneratorIs(\estvoyage\csv\generator $csvGenerator)
+	{
+		return new self($this->dataConsumer, $csvGenerator);
 	}
 
 	function dataConsumerIs(data\consumer $dataConsumer)
