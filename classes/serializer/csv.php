@@ -18,9 +18,9 @@ final class csv implements serialization\serializer, data\provider
 		$namespace = []
 	;
 
-	function __construct(data\consumer $dataConsumer, \estvoyage\csv\generator $csvGenerator = null)
+	function __construct(data\consumer $dataConsumer = null, \estvoyage\csv\generator $csvGenerator = null)
 	{
-		$this->dataConsumer = $dataConsumer;
+		$this->dataConsumer = $dataConsumer ?: new data\consumer\blackhole;
 		$this->csvGenerator =
 			$csvGenerator
 			?

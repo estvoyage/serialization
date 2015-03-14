@@ -31,6 +31,13 @@ class csv extends units\test
 			->given(
 				$dataConsumer = new mockOfData\consumer
 			)
+
+			->if(
+				$this->newTestedInstance
+			)
+			->then
+				->object($this->testedInstance)->isEqualTo($this->newTestedInstance(new data\consumer\blackhole, new \estvoyage\csv\generator\rfc4180))
+
 			->if(
 				$this->newTestedInstance($dataConsumer)
 			)
@@ -70,6 +77,110 @@ class csv extends units\test
 				->object($this->testedInstance->dataConsumerIs($dataConsumer))
 					->isNotTestedInstance
 					->isEqualTo($this->newTestedInstance($dataConsumer, $csvGenerator))
+		;
+	}
+
+	function testObjectTypeIs()
+	{
+		$this
+			->given(
+				$dataConsumer = new mockOfData\consumer,
+				$type = new object\type('foo')
+			)
+			->if(
+				$this->newTestedInstance
+			)
+			->then
+				->object($this->testedInstance->objectTypeIs($type))->isTestedInstance
+		;
+	}
+
+	function testStringObjectPropertyHasValue()
+	{
+		$this
+			->given(
+				$property = new object\property('foo'),
+				$string1 = new object\property\string('bar')
+			)
+			->if(
+				$this->newTestedInstance
+			)
+			->then
+				->object($this->testedInstance->stringObjectPropertyHasValue($property, $string1))->isTestedInstance
+		;
+	}
+
+	function testIntegerObjectPropertyHasValue()
+	{
+		$this
+			->given(
+				$property = new object\property('foo'),
+				$integer1 = new object\property\integer(666)
+			)
+			->if(
+				$this->newTestedInstance
+			)
+			->then
+				->object($this->testedInstance->integerObjectPropertyHasValue($property, $integer1))->isTestedInstance
+		;
+	}
+
+	function testFloatObjectPropertyHasValue()
+	{
+		$this
+			->given(
+				$property = new object\property('foo'),
+				$float1 = new object\property\float(666.999)
+			)
+			->if(
+				$this->newTestedInstance
+			)
+			->then
+				->object($this->testedInstance->floatObjectPropertyHasValue($property, $float1))->isTestedInstance
+		;
+	}
+
+	function testBooleanObjectPropertyHasValue()
+	{
+		$this
+			->given(
+				$property = new object\property('foo'),
+				$boolean1 = new object\property\boolean(rand(0, 1) == 1)
+			)
+			->if(
+				$this->newTestedInstance
+			)
+			->then
+				->object($this->testedInstance->booleanObjectPropertyHasValue($property, $boolean1))->isTestedInstance
+		;
+	}
+
+	function testStorableObjectPropertyHasValue()
+	{
+		$this
+			->given(
+				$property = new object\property('foo'),
+				$storable1 = new mockOfObject\storable
+			)
+			->if(
+				$this->newTestedInstance
+			)
+			->then
+				->object($this->testedInstance->storableObjectPropertyHasValue($property, $storable1))->isTestedInstance
+		;
+	}
+
+	function testNullObjectProperty()
+	{
+		$this
+			->given(
+				$property = new object\property('foo')
+			)
+			->if(
+				$this->newTestedInstance
+			)
+			->then
+				->object($this->testedInstance->nullObjectProperty($property))->isTestedInstance
 		;
 	}
 
