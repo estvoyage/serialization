@@ -6,12 +6,12 @@ require __DIR__ . '/../../runner.php';
 
 use
 	estvoyage\serialization\tests\units,
-	estvoyage\object,
 	estvoyage\data,
-	estvoyage\csv\record as csvRecord,
-	mock\estvoyage\csv\generator as csvGenerator,
-	mock\estvoyage\data\consumer,
-	mock\estvoyage\object\storable
+	estvoyage\object,
+	estvoyage\csv\record,
+	mock\estvoyage\csv as mockOfCsv,
+	mock\estvoyage\data as mockOfData,
+	mock\estvoyage\object as mockOfObject
 ;
 
 class csv extends units\test
@@ -25,19 +25,22 @@ class csv extends units\test
 		;
 	}
 
-	function testDataConsumerNeedStorable()
+	function testNewCsvRecord()
 	{
 		$this
 			->given(
-				$dataConsumer = new consumer,
+				$dataConsumer = new mockOfData\consumer,
 
-				$this->calling($csvGenerator = new csvGenerator)->dataConsumerNeedCsvRecord = $csvGenerator,
+				$csvGenerator = new mockOfCsv\generator,
+
+				$this->calling($csvGenerator)->dataConsumerIs = $csvGenerator,
+				$this->calling($csvGenerator)->newCsvRecord = $csvGenerator,
 
 				$this->newTestedInstance($dataConsumer, $csvGenerator)
 			)
 
 			->if(
-				$this->calling($storable1 = new storable)->objectStorerIs = function($serializer) {}
+				$this->calling($storable1 = new mockOfObject\storable)->objectStorerIs = function($serializer) {}
 			)
 			->then
 				->object($this->testedInstance->newStorable($storable1))->isTestedInstance
@@ -66,10 +69,10 @@ class csv extends units\test
 			->then
 				->object($this->testedInstance->newStorable($storable1))->isTestedInstance
 				->mock($csvGenerator)
-					->receive('dataConsumerNeedCsvRecord')
-						->withArguments($dataConsumer, new csvRecord\line(new data\data('string1Property')))
+					->receive('newCsvRecord')
+						->withArguments(new record\line(new data\data('string1Property')))
 							->once
-						->withArguments($dataConsumer, new csvRecord\line(new data\data('a string 1')))
+						->withArguments(new record\line(new data\data('a string 1')))
 							->once
 
 			->if(
@@ -81,10 +84,10 @@ class csv extends units\test
 			->then
 				->object($this->testedInstance->newStorable($storable1))->isTestedInstance
 				->mock($csvGenerator)
-					->receive('dataConsumerNeedCsvRecord')
-						->withArguments($dataConsumer, new csvRecord\line(new data\data('string1Property'), new data\data('string1Property')))
+					->receive('newCsvRecord')
+						->withArguments(new record\line(new data\data('string1Property'), new data\data('string1Property')))
 							->once
-						->withArguments($dataConsumer, new csvRecord\line(new data\data('a string 1'), new data\data('a string 1')))
+						->withArguments(new record\line(new data\data('a string 1'), new data\data('a string 1')))
 							->once
 
 			->given(
@@ -100,15 +103,15 @@ class csv extends units\test
 			->then
 				->object($this->testedInstance->newStorable($storable1))->isTestedInstance
 				->mock($csvGenerator)
-					->receive('dataConsumerNeedCsvRecord')
-						->withArguments($dataConsumer, new csvRecord\line(new data\data('string1Property'), new data\data('string2Property')))
+					->receive('newCsvRecord')
+						->withArguments(new record\line(new data\data('string1Property'), new data\data('string2Property')))
 							->once
-						->withArguments($dataConsumer, new csvRecord\line(new data\data('string1Property'), new data\data('string2Property')))
+						->withArguments(new record\line(new data\data('string1Property'), new data\data('string2Property')))
 							->once
 
 			->given(
 				$storable1Property = new object\property('storable1Property'),
-				$storable2 = new \mock\estvoyage\object\storable
+				$storable2 = new mockOfObject\storable
 			)
 
 			->if(
@@ -122,10 +125,10 @@ class csv extends units\test
 			->then
 				->object($this->testedInstance->newStorable($storable1))->isTestedInstance
 				->mock($csvGenerator)
-					->receive('dataConsumerNeedCsvRecord')
-						->withArguments($dataConsumer, new csvRecord\line(new data\data('storable1Property.string1Property')))
+					->receive('newCsvRecord')
+						->withArguments(new record\line(new data\data('storable1Property.string1Property')))
 							->once
-						->withArguments($dataConsumer, new csvRecord\line(new data\data('a string 1')))
+						->withArguments(new record\line(new data\data('a string 1')))
 							->twice
 
 			->if(
@@ -142,10 +145,10 @@ class csv extends units\test
 			->then
 				->object($this->testedInstance->newStorable($storable1))->isTestedInstance
 				->mock($csvGenerator)
-					->receive('dataConsumerNeedCsvRecord')
-						->withArguments($dataConsumer, new csvRecord\line(new data\data('string1Property'), new data\data('storable1Property.string1Property')))
+					->receive('newCsvRecord')
+						->withArguments(new record\line(new data\data('string1Property'), new data\data('storable1Property.string1Property')))
 							->once
-						->withArguments($dataConsumer, new csvRecord\line(new data\data('a string 1'), new data\data('a string 1')))
+						->withArguments(new record\line(new data\data('a string 1'), new data\data('a string 1')))
 							->twice
 
 			->if(
@@ -164,15 +167,15 @@ class csv extends units\test
 			->then
 				->object($this->testedInstance->newStorable($storable1))->isTestedInstance
 				->mock($csvGenerator)
-					->receive('dataConsumerNeedCsvRecord')
-						->withArguments($dataConsumer, new csvRecord\line(new data\data('string1Property'), new data\data('storable1Property.string1Property'), new data\data('string2Property')))
+					->receive('newCsvRecord')
+						->withArguments(new record\line(new data\data('string1Property'), new data\data('storable1Property.string1Property'), new data\data('string2Property')))
 							->once
-						->withArguments($dataConsumer, new csvRecord\line(new data\data('a string 1'), new data\data('a string 1'), new data\data('a string 2')))
+						->withArguments(new record\line(new data\data('a string 1'), new data\data('a string 1'), new data\data('a string 2')))
 							->once
 
 			->given(
 				$arrayProperty = new object\property('arrayProperty'),
-				$storable2 = new \mock\estvoyage\object\storable
+				$storable2 = new mockOfObject\storable
 			)
 
 			->if(
@@ -202,10 +205,10 @@ class csv extends units\test
 			->then
 				->object($this->testedInstance->newStorable($storable1))->isTestedInstance
 				->mock($csvGenerator)
-					->receive('dataConsumerNeedCsvRecord')
-						->withArguments($dataConsumer, new csvRecord\line(new data\data('integer1Property')))
+					->receive('newCsvRecord')
+						->withArguments(new record\line(new data\data('integer1Property')))
 							->once
-						->withArguments($dataConsumer, new csvRecord\line(new data\data('666')))
+						->withArguments(new record\line(new data\data('666')))
 							->once
 
 			->given(
@@ -222,10 +225,10 @@ class csv extends units\test
 			->then
 				->object($this->testedInstance->newStorable($storable1))->isTestedInstance
 				->mock($csvGenerator)
-					->receive('dataConsumerNeedCsvRecord')
-						->withArguments($dataConsumer, new csvRecord\line(new data\data('float1Property')))
+					->receive('newCsvRecord')
+						->withArguments(new record\line(new data\data('float1Property')))
 							->once
-						->withArguments($dataConsumer, new csvRecord\line(new data\data('666.999')))
+						->withArguments(new record\line(new data\data('666.999')))
 							->once
 
 			->given(
@@ -242,10 +245,10 @@ class csv extends units\test
 			->then
 				->object($this->testedInstance->newStorable($storable1))->isTestedInstance
 				->mock($csvGenerator)
-					->receive('dataConsumerNeedCsvRecord')
-						->withArguments($dataConsumer, new csvRecord\line(new data\data('boolean1Property')))
+					->receive('newCsvRecord')
+						->withArguments(new record\line(new data\data('boolean1Property')))
 							->once
-						->withArguments($dataConsumer, new csvRecord\line(new data\data('0')))
+						->withArguments(new record\line(new data\data('0')))
 							->once
 
 			->given(
@@ -262,10 +265,10 @@ class csv extends units\test
 			->then
 				->object($this->testedInstance->newStorable($storable2))->isTestedInstance
 				->mock($csvGenerator)
-					->receive('dataConsumerNeedCsvRecord')
-						->withArguments($dataConsumer, new csvRecord\line(new data\data('boolean2Property')))
+					->receive('newCsvRecord')
+						->withArguments(new record\line(new data\data('boolean2Property')))
 							->once
-						->withArguments($dataConsumer, new csvRecord\line(new data\data('1')))
+						->withArguments(new record\line(new data\data('1')))
 							->once
 
 			->given(
@@ -281,10 +284,10 @@ class csv extends units\test
 			->then
 				->object($this->testedInstance->newStorable($storable2))->isTestedInstance
 				->mock($csvGenerator)
-					->receive('dataConsumerNeedCsvRecord')
-						->withArguments($dataConsumer, new csvRecord\line(new data\data('nullProperty')))
+					->receive('newCsvRecord')
+						->withArguments(new record\line(new data\data('nullProperty')))
 							->once
-						->withArguments($dataConsumer, new csvRecord\line(new data\data('')))
+						->withArguments(new record\line(new data\data('')))
 							->once
 		;
 	}

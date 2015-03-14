@@ -11,7 +11,6 @@ use
 final class csv implements serialization\serializer, data\provider
 {
 	private
-		$dataConsumer,
 		$csvGenerator,
 		$header = [],
 		$line = [],
@@ -20,8 +19,7 @@ final class csv implements serialization\serializer, data\provider
 
 	function __construct(data\consumer $dataConsumer, \estvoyage\csv\generator $csvGenerator)
 	{
-		$this->dataConsumer = $dataConsumer;
-		$this->csvGenerator = $csvGenerator;
+		$this->csvGenerator = $csvGenerator->dataConsumerIs($dataConsumer);
 	}
 
 	function dataConsumerIs(data\consumer $dataConsumer)
@@ -35,10 +33,8 @@ final class csv implements serialization\serializer, data\provider
 
 		if (! $this->namespace)
 		{
-			$this->csvGenerator
-				->dataConsumerNeedCsvRecord($this->dataConsumer, new \estvoyage\csv\record\line(...$this->header))
-				->dataConsumerNeedCsvRecord($this->dataConsumer, new \estvoyage\csv\record\line(...$this->line))
-			;
+			$this->csvGenerator->newCsvRecord(new \estvoyage\csv\record\line(...$this->header));
+			$this->csvGenerator->newCsvRecord(new \estvoyage\csv\record\line(...$this->line));
 
 			$this->header = [];
 			$this->line = [];
