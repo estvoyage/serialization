@@ -11,37 +11,31 @@ use
 final class json  implements serialization\serializer, data\provider
 {
 	private
-		$dataConsumer,
-		$currentDelimiter
+		$data,
+		$propertyDelimiter
 	;
 
 	private static
 		$delimiter,
-		$objectStart,
-		$objectEnd,
 		$arrayStart,
 		$arrayEnd
 	;
 
-	function __construct(data\consumer $dataConsumer = null)
+	function __construct()
 	{
-		$this->dataConsumer = $dataConsumer ?: new data\consumer\blackhole;
+		$this->data = new data\data;
 	}
 
 	function dataConsumerIs(data\consumer $dataConsumer)
 	{
-		return new self($dataConsumer);
+		$dataConsumer->newData(self::newJsonFromData($this->data));
+
+		return $this;
 	}
 
 	function newStorable(object\storable $storable)
 	{
-		(new self($this->dataConsumer))
-			->newData(self::$objectStart ?: (self::$objectStart = new data\data('{')))
-			->storableIs($storable)
-			->newData(self::$objectEnd ?: (self::$objectEnd = new data\data('}')))
-		;
-
-		return $this;
+		return (new self)->storableIs($storable);
 	}
 
 	function objectTypeIs(object\type $type)
@@ -53,7 +47,7 @@ final class json  implements serialization\serializer, data\provider
 	{
 		return $this
 			->newProperty($property)
-			->newData(new data\data(json_encode((string) $string)))
+				->newData(new data\data(json_encode((string) $string)))
 		;
 	}
 
@@ -61,7 +55,7 @@ final class json  implements serialization\serializer, data\provider
 	{
 		return $this
 			->newProperty($property)
-			->newData(new data\data(json_encode($integer->asInteger)))
+				->newData(new data\data(json_encode($integer->asInteger)))
 		;
 	}
 
@@ -69,7 +63,7 @@ final class json  implements serialization\serializer, data\provider
 	{
 		return $this
 			->newProperty($property)
-			->newData(new data\data((string) $float))
+				->newData(new data\data((string) $float))
 		;
 	}
 
@@ -77,7 +71,7 @@ final class json  implements serialization\serializer, data\provider
 	{
 		return $this
 			->newProperty($property)
-			->newData(new data\data(json_encode($boolean->value)))
+				->newData(new data\data(json_encode($boolean->value)))
 		;
 	}
 
@@ -85,7 +79,7 @@ final class json  implements serialization\serializer, data\provider
 	{
 		return $this
 			->newProperty($property)
-			->newStorable($storable)
+				->newDataFromStorable($storable)
 		;
 	}
 
@@ -93,15 +87,15 @@ final class json  implements serialization\serializer, data\provider
 	{
 		$this
 			->newProperty($property)
-			->newData(self::arrayStart())
-			->newStorable($storable)
+				->newData(self::arrayStart())
+					->newDataFromStorable($storable)
 		;
 
 		foreach ($storables as $storable)
 		{
 			$this
 				->newData(self::delimiter())
-				->newStorable($storable)
+					->newDataFromStorable($storable)
 			;
 		}
 
@@ -112,20 +106,8 @@ final class json  implements serialization\serializer, data\provider
 	{
 		return $this
 			->newProperty($property)
-			->newData(new data\data(json_encode(null)))
+				->newData(new data\data(json_encode(null)))
 		;
-	}
-
-	private function newProperty(object\property $property)
-	{
-		return $this->newData(new data\data($this->currentDelimiter() . json_encode((string) $property) . ':'));
-	}
-
-	private function newData(data\data $data)
-	{
-		$this->dataConsumer->newData($data);
-
-		return $this;
 	}
 
 	private function storableIs(object\storable $storable)
@@ -135,16 +117,41 @@ final class json  implements serialization\serializer, data\provider
 		return $this;
 	}
 
-	private function currentDelimiter()
+	private function newData(data\data $data)
 	{
-		$delimiter = $this->currentDelimiter;
+		$this->data = $this->data->newData($data);
 
-		if (! $this->currentDelimiter)
-		{
-			$this->currentDelimiter = self::delimiter();
-		}
+		return $this;
+	}
 
-		return $delimiter;
+	private function newProperty(object\property $property)
+	{
+		return $this
+			->propertyDelimiter()
+				->newData(new data\data(json_encode((string) $property) . ':'))
+		;
+	}
+
+	private function newDataFromStorable(object\storable $storable)
+	{
+		return $this->newData(self::newJsonFromData($this->newStorable($storable)->data));
+	}
+
+	private function propertyDelimiter()
+	{
+		! $this->propertyDelimiter
+			?
+			$this->propertyDelimiter = self::delimiter()
+			:
+			$this->newData($this->propertyDelimiter)
+		;
+
+		return $this;
+	}
+
+	private static function newJsonFromData(data\data $data)
+	{
+		return new data\data('{' . $data . '}');
 	}
 
 	private static function delimiter()

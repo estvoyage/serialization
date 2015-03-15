@@ -13,8 +13,8 @@ final class csv implements serialization\serializer, data\provider
 	private
 		$dataConsumer,
 		$csvGenerator,
-		$header = [],
-		$line = [],
+		$header,
+		$line,
 		$namespace = []
 	;
 
@@ -28,6 +28,8 @@ final class csv implements serialization\serializer, data\provider
 			:
 			new \estvoyage\csv\generator\rfc4180($this->dataConsumer)
 		;
+		$this->header = new \estvoyage\csv\record\line;
+		$this->line = new \estvoyage\csv\record\line;
 	}
 
 	function csvGeneratorIs(\estvoyage\csv\generator $csvGenerator)
@@ -42,16 +44,11 @@ final class csv implements serialization\serializer, data\provider
 
 	function newStorable(object\storable $storable)
 	{
-		$storable->objectStorerIs($this);
+		$serializer = clone $this;
 
-		if (! $this->namespace)
-		{
-			$this->csvGenerator->newCsvRecord(new \estvoyage\csv\record\line(...$this->header));
-			$this->csvGenerator->newCsvRecord(new \estvoyage\csv\record\line(...$this->line));
+		$storable->objectStorerIs($serializer);
 
-			$this->header = [];
-			$this->line = [];
-		}
+		$serializer->noMoreObjectProperty();
 
 		return $this;
 	}
@@ -85,7 +82,7 @@ final class csv implements serialization\serializer, data\provider
 	{
 		$this->namespace[] = $property;
 
-		$this->newStorable($storable);
+		$storable->objectStorerIs($this);
 
 		array_pop($this->namespace);
 
@@ -102,10 +99,18 @@ final class csv implements serialization\serializer, data\provider
 		return $this->addPropertyWithValue($property, new data\data(''));
 	}
 
+	function noMoreObjectProperty()
+	{
+		$this->csvGenerator->newCsvRecord($this->header);
+		$this->csvGenerator->newCsvRecord($this->line);
+
+		return $this;
+	}
+
 	private function addPropertyWithValue(object\property $property, data\data $value)
 	{
-		$this->header[] = new data\data((! $this->namespace ? '' : join('.', $this->namespace) . '.') . $property);
-		$this->line[] = $value;
+		$this->header = $this->header->newData(new data\data((! $this->namespace ? '' : join('.', $this->namespace) . '.') . $property));
+		$this->line = $this->line->newData($value);
 
 		return $this;
 	}

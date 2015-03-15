@@ -12,12 +12,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/estvoyage/csv.git",
-                "reference": "90682a85eab8d911bab5ff5170d09eff15233c28"
+                "reference": "74502adf53f6a069b4894e658119a587ce24e9f4"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/estvoyage/csv/zipball/90682a85eab8d911bab5ff5170d09eff15233c28",
-                "reference": "90682a85eab8d911bab5ff5170d09eff15233c28",
+                "url": "https://api.github.com/repos/estvoyage/csv/zipball/74502adf53f6a069b4894e658119a587ce24e9f4",
+                "reference": "74502adf53f6a069b4894e658119a587ce24e9f4",
                 "shasum": ""
             },
             "require": {
@@ -52,7 +52,7 @@
                 "East",
                 "csv"
             ],
-            "time": "2015-03-14 19:31:54"
+            "time": "2015-03-15 14:10:37"
         },
         {
             "name": "estvoyage/data",
@@ -60,12 +60,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/estvoyage/data.git",
-                "reference": "3c4fe39bb074627ed72ab37f900c42ac395c35d7"
+                "reference": "661adf32ba284ec3bc5083bf06e606c59582a8b3"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/estvoyage/data/zipball/3c4fe39bb074627ed72ab37f900c42ac395c35d7",
-                "reference": "3c4fe39bb074627ed72ab37f900c42ac395c35d7",
+                "url": "https://api.github.com/repos/estvoyage/data/zipball/661adf32ba284ec3bc5083bf06e606c59582a8b3",
+                "reference": "661adf32ba284ec3bc5083bf06e606c59582a8b3",
                 "shasum": ""
             },
             "require": {
@@ -98,7 +98,7 @@
                 "East",
                 "data"
             ],
-            "time": "2015-03-13 20:20:05"
+            "time": "2015-03-14 20:31:56"
         },
         {
             "name": "estvoyage/object",
@@ -106,12 +106,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/estvoyage/object.git",
-                "reference": "46579f6d662e571ea5a8e201780bb385d05781eb"
+                "reference": "e89785150975a17ceffc2fd79871a9c0efef0acc"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/estvoyage/object/zipball/46579f6d662e571ea5a8e201780bb385d05781eb",
-                "reference": "46579f6d662e571ea5a8e201780bb385d05781eb",
+                "url": "https://api.github.com/repos/estvoyage/object/zipball/e89785150975a17ceffc2fd79871a9c0efef0acc",
+                "reference": "e89785150975a17ceffc2fd79871a9c0efef0acc",
                 "shasum": ""
             },
             "require": {
@@ -144,7 +144,7 @@
                 "East",
                 "object"
             ],
-            "time": "2015-03-13 19:30:52"
+            "time": "2015-03-14 20:30:34"
         },
         {
             "name": "estvoyage/value",
@@ -152,12 +152,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/estvoyage/value.git",
-                "reference": "aa7fda2ea45f65c1997d06db8285c25a3f927704"
+                "reference": "5274328b2b959fec2df1899aed4fcff6d6f2c046"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/estvoyage/value/zipball/aa7fda2ea45f65c1997d06db8285c25a3f927704",
-                "reference": "aa7fda2ea45f65c1997d06db8285c25a3f927704",
+                "url": "https://api.github.com/repos/estvoyage/value/zipball/5274328b2b959fec2df1899aed4fcff6d6f2c046",
+                "reference": "5274328b2b959fec2df1899aed4fcff6d6f2c046",
                 "shasum": ""
             },
             "require": {
@@ -191,7 +191,7 @@
                 "Whole value",
                 "value"
             ],
-            "time": "2015-03-14 20:19:48"
+            "time": "2015-03-14 20:30:17"
         }
     ],
     "packages-dev": [
