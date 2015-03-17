@@ -36,13 +36,7 @@ class csv extends units\test
 				$this->newTestedInstance
 			)
 			->then
-				->object($this->testedInstance)->isEqualTo($this->newTestedInstance(new data\consumer\blackhole, new \estvoyage\csv\generator\rfc4180))
-
-			->if(
-				$this->newTestedInstance($dataConsumer)
-			)
-			->then
-				->object($this->testedInstance)->isEqualTo($this->newTestedInstance($dataConsumer, new \estvoyage\csv\generator\rfc4180))
+				->object($this->testedInstance)->isEqualTo($this->newTestedInstance(new \estvoyage\csv\generator\rfc4180))
 		;
 	}
 
@@ -50,16 +44,15 @@ class csv extends units\test
 	{
 		$this
 			->given(
-				$dataConsumer = new mockOfData\consumer,
-				$this->calling($csvGenerator = new mockOfCsv\generator)->dataConsumerIs = $csvGenerator
+				$csvGenerator = new mockOfCsv\generator
 			)
 			->if(
-				$this->newTestedInstance($dataConsumer)
+				$this->newTestedInstance
 			)
 			->then
 				->object($this->testedInstance->csvGeneratorIs($csvGenerator))
 					->isNotTestedInstance
-					->isEqualTo($this->newTestedInstance($dataConsumer, $csvGenerator))
+					->isEqualTo($this->newTestedInstance($csvGenerator))
 		;
 	}
 
@@ -68,15 +61,27 @@ class csv extends units\test
 		$this
 			->given(
 				$dataConsumer = new mockOfData\consumer,
-				$this->calling($csvGenerator = new mockOfCsv\generator)->dataConsumerIs = $csvGenerator
+				$this->calling($csvGenerator = new mockOfCsv\generator)->newCsvRecord = $csvGeneratorAfterHeader = new mockOfCsv\generator,
+				$this->calling($csvGeneratorAfterHeader)->newCsvRecord = $csvGeneratorAfterLine = new mockOfCsv\generator
 			)
 			->if(
-				$this->newTestedInstance(new mockOfData\consumer, $csvGenerator)
+				$this->newTestedInstance($csvGenerator)
 			)
 			->then
 				->object($this->testedInstance->dataConsumerIs($dataConsumer))
-					->isNotTestedInstance
-					->isEqualTo($this->newTestedInstance($dataConsumer, $csvGenerator))
+					->isTestedInstance
+				->mock($csvGenerator)
+					->receive('newCsvRecord')
+						->withArguments(new \estvoyage\csv\record\line)
+							->once
+				->mock($csvGeneratorAfterHeader)
+					->receive('newCsvRecord')
+						->withArguments(new \estvoyage\csv\record\line)
+							->once
+				->mock($csvGeneratorAfterLine)
+					->receive('dataConsumerIs')
+						->withArguments($dataConsumer)
+							->once
 		;
 	}
 
@@ -190,90 +195,120 @@ class csv extends units\test
 			->given(
 				$dataConsumer = new mockOfData\consumer,
 
-				$csvGenerator = new mockOfCsv\generator,
+				$this->calling($csvGenerator = new mockOfCsv\generator)->newCsvRecord = $csvGeneratorAfterHeader = new mockOfCsv\generator,
+				$this->calling($csvGeneratorAfterHeader)->newCsvRecord = $csvGeneratorAfterLine = new mockOfCsv\generator,
 
-				$this->calling($csvGenerator)->dataConsumerIs = $csvGenerator,
-				$this->calling($csvGenerator)->newCsvRecord = $csvGenerator,
-
-				$this->newTestedInstance($dataConsumer, $csvGenerator)
+				$this->newTestedInstance($csvGenerator)
 			)
 
 			->if(
 				$this->calling($storable1 = new mockOfObject\storable)->objectStorerIs = function($serializer) {}
 			)
 			->then
-				->object($this->testedInstance->newStorable($storable1))->isTestedInstance
-				->mock($dataConsumer)->receive('newData')->never
+				->object($this->testedInstance->newStorable($storable1))
+					->isNotTestedInstance
+					->isInstanceOf($this->testedInstance)
+				->mock($storable1)
+					->receive('objectStorerIs')
+						->withArguments($this->newTestedInstance($csvGenerator))
+							->once
 
 			->if(
+				$this->testedInstance->newStorable($storable1)->dataConsumerIs($dataConsumer)
+			)
+			->then
+				->mock($csvGenerator)
+					->receive('newCsvRecord')
+						->withArguments(new record\line)
+							->once
+				->mock($csvGeneratorAfterHeader)
+					->receive('newCsvRecord')
+						->withArguments(new record\line)
+							->once
+
+			->given(
 				$type = new object\type('aType'),
 				$this->calling($storable1)->objectStorerIs = function($serializer) use ($type) {
 					$serializer->objectTypeIs($type);
 				}
 			)
+			->if(
+				$this->testedInstance->newStorable($storable1)->dataConsumerIs($dataConsumer)
+			)
 			->then
-				->object($this->testedInstance->newStorable($storable1))->isTestedInstance
-				->mock($dataConsumer)->receive('newData')->never
+				->mock($csvGenerator)
+					->receive('newCsvRecord')
+						->withArguments(new record\line)
+							->twice
+				->mock($csvGeneratorAfterHeader)
+					->receive('newCsvRecord')
+						->withArguments(new record\line)
+							->twice
 
 			->given(
 				$string1Property = new object\property('string1Property'),
-				$string1 = new object\property\string('a string 1')
-			)
-
-			->if(
+				$string1 = new object\property\string('a string 1'),
 				$this->calling($storable1)->objectStorerIs = function($serializer) use ($string1Property, $string1) {
 					$serializer->stringObjectPropertyHasValue($string1Property, $string1);
 				}
 			)
+			->if(
+				$this->testedInstance->newStorable($storable1)->dataConsumerIs($dataConsumer)
+			)
 			->then
-				->object($this->testedInstance->newStorable($storable1))->isTestedInstance
 				->mock($csvGenerator)
 					->receive('newCsvRecord')
 						->withArguments(new record\line(new data\data('string1Property')))
 							->once
+				->mock($csvGeneratorAfterHeader)
+					->receive('newCsvRecord')
 						->withArguments(new record\line(new data\data('a string 1')))
 							->once
 
-			->if(
+
+			->given(
 				$this->calling($storable1)->objectStorerIs = function($serializer) use ($string1Property, $string1) {
 					$serializer->stringObjectPropertyHasValue($string1Property, $string1);
 					$serializer->stringObjectPropertyHasValue($string1Property, $string1);
 				}
 			)
+			->if(
+				$this->testedInstance->newStorable($storable1)->dataConsumerIs($dataConsumer)
+			)
 			->then
-				->object($this->testedInstance->newStorable($storable1))->isTestedInstance
 				->mock($csvGenerator)
 					->receive('newCsvRecord')
 						->withArguments(new record\line(new data\data('string1Property'), new data\data('string1Property')))
 							->once
+				->mock($csvGeneratorAfterHeader)
+					->receive('newCsvRecord')
 						->withArguments(new record\line(new data\data('a string 1'), new data\data('a string 1')))
 							->once
 
 			->given(
 				$string2Property = new object\property('string2Property'),
-				$string2 = new object\property\string('a string 2')
-			)
-			->if(
+				$string2 = new object\property\string('a string 2'),
 				$this->calling($storable1)->objectStorerIs = function($serializer) use ($string1Property, $string1, $string2Property, $string2) {
 					$serializer->stringObjectPropertyHasValue($string1Property, $string1);
 					$serializer->stringObjectPropertyHasValue($string2Property, $string2);
 				}
 			)
+			->if(
+				$this->testedInstance->newStorable($storable1)->dataConsumerIs($dataConsumer)
+			)
 			->then
-				->object($this->testedInstance->newStorable($storable1))->isTestedInstance
 				->mock($csvGenerator)
 					->receive('newCsvRecord')
 						->withArguments(new record\line(new data\data('string1Property'), new data\data('string2Property')))
 							->once
-						->withArguments(new record\line(new data\data('string1Property'), new data\data('string2Property')))
+				->mock($csvGeneratorAfterHeader)
+					->receive('newCsvRecord')
+						->withArguments(new record\line(new data\data('a string 1'), new data\data('a string 2')))
 							->once
 
 			->given(
 				$storable1Property = new object\property('storable1Property'),
-				$storable2 = new mockOfObject\storable
-			)
-
-			->if(
+				$storable2 = new mockOfObject\storable,
 				$this->calling($storable2)->objectStorerIs = function($serializer) use ($string1Property, $string1) {
 					$serializer->stringObjectPropertyHasValue($string1Property, $string1);
 				},
@@ -281,16 +316,20 @@ class csv extends units\test
 					$serializer->storableObjectPropertyHasValue($storable1Property, $storable2);
 				}
 			)
+			->if(
+				$this->testedInstance->newStorable($storable1)->dataConsumerIs($dataConsumer)
+			)
 			->then
-				->object($this->testedInstance->newStorable($storable1))->isTestedInstance
 				->mock($csvGenerator)
 					->receive('newCsvRecord')
 						->withArguments(new record\line(new data\data('storable1Property.string1Property')))
 							->once
+				->mock($csvGeneratorAfterHeader)
+					->receive('newCsvRecord')
 						->withArguments(new record\line(new data\data('a string 1')))
 							->twice
 
-			->if(
+			->given(
 				$this->calling($storable2)->objectStorerIs = function($serializer) use ($string1Property, $string1) {
 					$serializer->stringObjectPropertyHasValue($string1Property, $string1);
 				},
@@ -301,16 +340,20 @@ class csv extends units\test
 					;
 				}
 			)
+			->if(
+				$this->testedInstance->newStorable($storable1)->dataConsumerIs($dataConsumer)
+			)
 			->then
-				->object($this->testedInstance->newStorable($storable1))->isTestedInstance
 				->mock($csvGenerator)
 					->receive('newCsvRecord')
 						->withArguments(new record\line(new data\data('string1Property'), new data\data('storable1Property.string1Property')))
 							->once
+				->mock($csvGeneratorAfterHeader)
+					->receive('newCsvRecord')
 						->withArguments(new record\line(new data\data('a string 1'), new data\data('a string 1')))
 							->twice
 
-			->if(
+			->given(
 				$this->calling($storable1)->objectStorerIs = function($serializer) use (
 						$string1Property, $string1,
 						$storable1Property, $storable2,
@@ -323,12 +366,16 @@ class csv extends units\test
 					;
 				}
 			)
+			->if(
+				$this->testedInstance->newStorable($storable1)->dataConsumerIs($dataConsumer)
+			)
 			->then
-				->object($this->testedInstance->newStorable($storable1))->isTestedInstance
 				->mock($csvGenerator)
 					->receive('newCsvRecord')
 						->withArguments(new record\line(new data\data('string1Property'), new data\data('storable1Property.string1Property'), new data\data('string2Property')))
 							->once
+				->mock($csvGeneratorAfterHeader)
+					->receive('newCsvRecord')
 						->withArguments(new record\line(new data\data('a string 1'), new data\data('a string 1'), new data\data('a string 2')))
 							->once
 
@@ -336,7 +383,6 @@ class csv extends units\test
 				$arrayProperty = new object\property('arrayProperty'),
 				$storable2 = new mockOfObject\storable
 			)
-
 			->if(
 				$this->calling($storable2)->objectStorerIs = function($serializer) use ($string1Property, $string1) {
 					$serializer->stringObjectPropertyHasValue($string1Property, $string1);
@@ -352,100 +398,110 @@ class csv extends units\test
 
 			->given(
 				$integer1Property = new object\property('integer1Property'),
-				$integer1 = new object\property\integer(666)
-			)
-			->if(
+				$integer1 = new object\property\integer(666),
 				$this->calling($storable1)->objectStorerIs = function($serializer) use (
 						$integer1Property, $integer1
 					) {
 					$serializer->integerObjectPropertyHasValue($integer1Property, $integer1);
 				}
 			)
+			->if(
+				$this->testedInstance->newStorable($storable1)->dataConsumerIs($dataConsumer)
+			)
 			->then
-				->object($this->testedInstance->newStorable($storable1))->isTestedInstance
 				->mock($csvGenerator)
 					->receive('newCsvRecord')
 						->withArguments(new record\line(new data\data('integer1Property')))
 							->once
+				->mock($csvGeneratorAfterHeader)
+					->receive('newCsvRecord')
 						->withArguments(new record\line(new data\data('666')))
 							->once
 
 			->given(
 				$float1Property = new object\property('float1Property'),
-				$float1 = new object\property\float(666.999)
-			)
-			->if(
+				$float1 = new object\property\float(666.999),
 				$this->calling($storable1)->objectStorerIs = function($serializer) use (
 						$float1Property, $float1
 					) {
 					$serializer->floatObjectPropertyHasValue($float1Property, $float1);
 				}
 			)
+			->if(
+				$this->testedInstance->newStorable($storable1)->dataConsumerIs($dataConsumer)
+			)
 			->then
-				->object($this->testedInstance->newStorable($storable1))->isTestedInstance
 				->mock($csvGenerator)
 					->receive('newCsvRecord')
 						->withArguments(new record\line(new data\data('float1Property')))
 							->once
+				->mock($csvGeneratorAfterHeader)
+					->receive('newCsvRecord')
 						->withArguments(new record\line(new data\data('666.999')))
 							->once
 
 			->given(
 				$boolean1Property = new object\property('boolean1Property'),
-				$boolean1 = new object\property\boolean(false)
-			)
-			->if(
+				$boolean1 = new object\property\boolean(false),
 				$this->calling($storable1)->objectStorerIs = function($serializer) use (
 						$boolean1Property, $boolean1
 					) {
 					$serializer->booleanObjectPropertyHasValue($boolean1Property, $boolean1);
 				}
 			)
+			->if(
+				$this->testedInstance->newStorable($storable1)->dataConsumerIs($dataConsumer)
+			)
 			->then
-				->object($this->testedInstance->newStorable($storable1))->isTestedInstance
 				->mock($csvGenerator)
 					->receive('newCsvRecord')
 						->withArguments(new record\line(new data\data('boolean1Property')))
 							->once
+				->mock($csvGeneratorAfterHeader)
+					->receive('newCsvRecord')
 						->withArguments(new record\line(new data\data('0')))
 							->once
 
 			->given(
 				$boolean2Property = new object\property('boolean2Property'),
-				$boolean2 = new object\property\boolean(true)
-			)
-			->if(
+				$boolean2 = new object\property\boolean(true),
 				$this->calling($storable2)->objectStorerIs = function($serializer) use (
 						$boolean2Property, $boolean2
 					) {
 					$serializer->booleanObjectPropertyHasValue($boolean2Property, $boolean2);
 				}
 			)
+			->if(
+				$this->testedInstance->newStorable($storable2)->dataConsumerIs($dataConsumer)
+			)
 			->then
-				->object($this->testedInstance->newStorable($storable2))->isTestedInstance
 				->mock($csvGenerator)
 					->receive('newCsvRecord')
 						->withArguments(new record\line(new data\data('boolean2Property')))
 							->once
+				->mock($csvGeneratorAfterHeader)
+					->receive('newCsvRecord')
 						->withArguments(new record\line(new data\data('1')))
 							->once
 
 			->given(
-				$nullProperty = new object\property('nullProperty')
-			)
-			->if(
+				$nullProperty = new object\property('nullProperty'),
 				$this->calling($storable2)->objectStorerIs = function($serializer) use (
 						$nullProperty
 					) {
 					$serializer->nullObjectProperty($nullProperty);
 				}
 			)
+			->if(
+				$this->testedInstance->newStorable($storable2)->dataConsumerIs($dataConsumer)
+			)
 			->then
-				->object($this->testedInstance->newStorable($storable2))->isTestedInstance
 				->mock($csvGenerator)
 					->receive('newCsvRecord')
 						->withArguments(new record\line(new data\data('nullProperty')))
 							->once
+				->mock($csvGeneratorAfterHeader)
+					->receive('newCsvRecord')
 						->withArguments(new record\line(new data\data('')))
 							->once
 		;
