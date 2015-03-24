@@ -41,10 +41,27 @@ use
 
 class console implements data\consumer
 {
+	function dataProviderIs(data\provider $provider)
+	{
+		$provider->dataConsumerIs($this);
+
+		return $this;
+	}
+
 	function newData(data\data $data)
 	{
-		echo $data . PHP_EOL;
+		echo 'Serialization: <' . $data . '>' . PHP_EOL;
 
+		return $this;
+	}
+
+	function noMoreData()
+	{
+		return $this;
+	}
+
+	function dataConsumerControllerIs(data\consumer\controller $controller)
+	{
 		return $this;
 	}
 }
@@ -70,15 +87,15 @@ class foo implements object\storable
 		$this->nullProperty = $null;
 	}
 
-	function storerIsReady(object\storer $storer)
+	function objectStorerIs(object\storer $storer)
 	{
 		$storer
-			->stringPropertyHasValue(new object\property('stringProperty'), new object\property\string($this->stringProperty))
-			->integerPropertyHasValue(new object\property('integerProperty'), new object\property\integer($this->integerProperty))
-			->floatPropertyHasValue(new object\property('floatProperty'), new object\property\float($this->floatProperty))
-			->booleanPropertyHasValue(new object\property('booleanProperty'), new object\property\boolean($this->booleanProperty))
-			->storablePropertyHasValue(new object\property('storableProperty'), $this->storableProperty)
-			->nullProperty(new object\property('nullProperty'))
+			->stringObjectPropertyHasValue(new object\property('stringProperty'), new object\property\string($this->stringProperty))
+			->integerObjectPropertyHasValue(new object\property('integerProperty'), new object\property\integer($this->integerProperty))
+			->floatObjectPropertyHasValue(new object\property('floatProperty'), new object\property\float($this->floatProperty))
+			->booleanObjectPropertyHasValue(new object\property('booleanProperty'), new object\property\boolean($this->booleanProperty))
+			->storableObjectPropertyHasValue(new object\property('storableProperty'), $this->storableProperty)
+			->nullObjectProperty(new object\property('nullProperty'))
 		;
 	}
 }
@@ -94,37 +111,33 @@ class bar implements object\storable
 		$this->value = $value;
 	}
 
-	function storerIsReady(object\storer $storer)
+	function objectStorerIs(object\storer $storer)
 	{
 		$storer
-			->stringPropertyHasValue(new object\property('value'), new object\property\string($this->value))
+			->stringObjectPropertyHasValue(new object\property('value'), new object\property\string($this->value))
 		;
 	}
 }
 
 $console = new console;
+
 $foo = new foo(uniqid(), 666, 666.999, true, new bar(uniqid()));
 
 (new serialization\serializer\json)
-	->dataConsumerNeedSerializationOfStorable(
-		$console->newData(new data\data('As JSON:')),
-		$foo
-	)
+	->newStorable($foo)
+	->dataConsumerIs($console)
 ;
 
 (new serialization\serializer\csv(new csv\generator\rfc4180))
-	->dataConsumerNeedSerializationOfStorable(
-		$console->newData(new data\data('As CSV:')),
-		$foo
-	)
+	->newStorable($foo)
+	->dataConsumerIs($console)
 ;
 
-/*
-As JSON:
-{"stringProperty":"54ece9fba7bfe","integerProperty":666,"floatProperty":666.999,"booleanProperty":true,"storableProperty":{"value":"54ece9fba7c0c"},"nullProperty":null}
-As CSV:
-stringProperty,integerProperty,floatProperty,booleanProperty,storableProperty.value,nullProperty
-54ece9fba7bfe,666,666.999,1,54ece9fba7c0c,
+/* Output will be something like:
+Serialization: <{"stringProperty":"5511d589ef90a","integerProperty":666,"floatProperty":666.999,"booleanProperty":true,"storableProperty":{"value":"5511d589ef932"},"nullProperty":null}>
+Serialization: <stringProperty,integerProperty,floatProperty,booleanProperty,storableProperty.value,nullProperty
+5511d589ef90a,666,666.999,1,5511d589ef932,
+>
 */
 ```
 

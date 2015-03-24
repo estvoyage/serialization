@@ -8,7 +8,7 @@ use
 	estvoyage\serialization
 ;
 
-final class json  implements serialization\serializer, data\provider
+final class json implements serialization\serializer, data\provider
 {
 	private
 		$data,
