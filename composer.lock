@@ -60,12 +60,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/estvoyage/data.git",
-                "reference": "661adf32ba284ec3bc5083bf06e606c59582a8b3"
+                "reference": "8751d8e1d3fdbe0403acd971204dae278dec36bd"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/estvoyage/data/zipball/661adf32ba284ec3bc5083bf06e606c59582a8b3",
-                "reference": "661adf32ba284ec3bc5083bf06e606c59582a8b3",
+                "url": "https://api.github.com/repos/estvoyage/data/zipball/8751d8e1d3fdbe0403acd971204dae278dec36bd",
+                "reference": "8751d8e1d3fdbe0403acd971204dae278dec36bd",
                 "shasum": ""
             },
             "require": {
@@ -98,7 +98,7 @@
                 "East",
                 "data"
             ],
-            "time": "2015-03-14 20:31:56"
+            "time": "2015-03-24 12:50:30"
         },
         {
             "name": "estvoyage/object",
@@ -106,12 +106,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/estvoyage/object.git",
-                "reference": "e89785150975a17ceffc2fd79871a9c0efef0acc"
+                "reference": "5dae179113c4c2fbd447f98a020105a8bad0f448"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/estvoyage/object/zipball/e89785150975a17ceffc2fd79871a9c0efef0acc",
-                "reference": "e89785150975a17ceffc2fd79871a9c0efef0acc",
+                "url": "https://api.github.com/repos/estvoyage/object/zipball/5dae179113c4c2fbd447f98a020105a8bad0f448",
+                "reference": "5dae179113c4c2fbd447f98a020105a8bad0f448",
                 "shasum": ""
             },
             "require": {
@@ -144,7 +144,7 @@
                 "East",
                 "object"
             ],
-            "time": "2015-03-14 20:30:34"
+            "time": "2015-03-24 12:29:27"
         },
         {
             "name": "estvoyage/value",
